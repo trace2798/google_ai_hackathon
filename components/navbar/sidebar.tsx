@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ClerkLoading, ClerkLoaded, UserButton } from "@clerk/nextjs";
-import { Building, Loader } from "lucide-react";
+import { Building, Building2, Loader } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -28,22 +28,10 @@ export const Sidebar = ({ className }: Props) => {
       </Link>
       <div className="flex flex-col gap-y-2 flex-1">
         <SidebarItem
-          label="Organizations"
-          href="/organizations"
-          // iconSrc="/learn.svg"
-          // icon={Building}
-        />
-        <SidebarItem
-          label="Search"
+          label="Search Web"
           href="/search"
-          // iconSrc="/leaderboard.svg"
-          // icon={Building}
-        />
-        <SidebarItem
-          label="Settings"
-          href="/settings"
-          // iconSrc="/leaderboard.svg"
-          // icon={Building}
+          // iconSrc="/globe.svg"
+          // icon={Building2}
         />
         <SidebarItem
           label="Wikipedia"
@@ -51,6 +39,20 @@ export const Sidebar = ({ className }: Props) => {
           // iconSrc="/leaderboard.svg"
           // icon={Building}
         />
+        <SidebarItem
+          label="Document"
+          href="/documents"
+          // iconSrc="/globe.svg"
+          // icon={Building}
+        />
+
+        {/* <SidebarItem
+          label="Settings"
+          href="/settings"
+          // iconSrc="/leaderboard.svg"
+          // icon={Building}
+        /> */}
+
         {/* <SidebarItem label="quests" href="/quests" />
         <SidebarItem label="shop" href="/shop"  /> */}
       </div>
