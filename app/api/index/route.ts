@@ -6,7 +6,7 @@ import { Index } from "@upstash/vector";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 // import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-import { currentCompanionId } from "@/lib/companion-id";
+// import { currentCompanionId } from "@/lib/companion-id";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { GoogleGenerativeAI, TaskType } from "@google/generative-ai";
@@ -19,16 +19,17 @@ export async function POST(req: NextRequest) {
   console.log("BODY", body);
   const document = body.get("uploadedFile");
   console.log("DOCUMENT", document);
-  const companionID = await currentCompanionId();
-  const companion = await db.companion.findUnique({
-    where: {
-      id: companionID as string,
-    },
-  });
-  const orgId = companion?.orgId;
-  console.log("ORGANIZATION ID:", orgId);
-  console.log("COMPANION ID", companionID);
+  // const companionID = await currentCompanionId();
+  // const companion = await db.companion.findUnique({
+  //   where: {
+  //     id: companionID as string,
+  //   },
+  // });
+  // const orgId = companion?.orgId;
+  // console.log("ORGANIZATION ID:", orgId);
+  // console.log("COMPANION ID", companionID);
   const profile = await currentProfile();
+  console.log("PROFILE", profile);
   const index = new Index({
     url: process.env.UPSTASH_VECTOR_REST_URL!,
     token: process.env.UPSTASH_VECTOR_REST_TOKEN!,
@@ -49,20 +50,18 @@ export async function POST(req: NextRequest) {
       const selectedDocuments = docs.filter(
         (doc) => doc.pageContent !== undefined
       );
-      // const texts = selectedDocuments.map((doc) => doc.pageContent);
-      const fileId = await db.file.create({
+     
+      const file = await db.file.create({
         data: {
           name: (document as File).name,
-          orgId: companion?.orgId as string,
           profileId: profile?.id as string,
           indexDone: false,
-          companionId: companionID as string,
           uploadStatus: "PROCESSING",
           pageAmt: pagesAmt ?? 0,
           fileType: "PDF",
         },
       });
-      console.log("FILE ID", fileId.id);
+      console.log("Created FILE", file);
       try {
         for (const doc of docs) {
           const txtPath = doc.metadata.loc.pageNumber;
@@ -131,9 +130,9 @@ export async function POST(req: NextRequest) {
                   vector: vector.values,
                   metadata: {
                     pageContent: vector.metadata.pageContent,
-                    txtPath: vector.metadata.txtPath,
-                    orgId: orgId,
-                    companionId: companionID,
+                    pageNumber: vector.metadata.txtPath,
+                    profileId: profile?.id,
+                    fileId: file.id,
                   },
                 });
               }
@@ -143,13 +142,16 @@ export async function POST(req: NextRequest) {
         }
         const updateFileInfo = await db.file.update({
           where: {
-            id: fileId.id,
+            id: file.id,
           },
           data: {
             uploadStatus: "SUCCESS",
             indexDone: true,
           },
         });
+        return new NextResponse(JSON.stringify(updateFileInfo), {
+          status: 200,
+        })
       } catch (error) {
         console.log("Error embedding pdf document", error);
       }

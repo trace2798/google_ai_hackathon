@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Loader2, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const UploadDoc = () => {
   const [document, setDocument] = useState<File | null | undefined>(null);
@@ -49,8 +50,9 @@ const UploadDoc = () => {
       });
       if (res.status === 200) {
         const data = await res.json();
-        const documentId = data.documentId;
-
+        console.log("DATA", data);
+        const documentId = data.id;
+        toast.success("Document embedded successfully");
         router.push(`/documents/${documentId}`);
       }
     } catch (e) {
@@ -120,15 +122,18 @@ const UploadDoc = () => {
               id="document"
               className="relative block w-full h-full z-50 opacity-0 hover:cursor-pointer"
               onChange={handleDocumentUpload}
-              accept=".pdf,.docx,.txt,.md"
+              accept=".pdf,.txt,.md"
             />
           </Label>
           <p className="text-secondary-foreground my-2">
-            Supported file types: pdf
+            Supported file types: pdf <br />
+            <p className="text-muted-foreground text-sm">
+              [Keeping privacy on mind, files are not stored on our server]
+            </p>
           </p>
           {error ? <p className="text-red-600">{error}</p> : null}
           <Button disabled={!document} size="lg" className="mt-2" type="submit">
-            Upload and Index pdf
+            Embed Document
           </Button>
         </form>
       )}
