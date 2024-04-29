@@ -32,7 +32,7 @@ const Page: FC<PageProps> = async ({}) => {
               <CardTitle className="font-light text-lg">{file.name}</CardTitle>
             </CardHeader>
             <CardFooter>
-              <Link href={`/document/${file.id}`}>
+              <Link href={`/documents/${file.id}`}>
                 <Button>Chat</Button>
               </Link>
             </CardFooter>

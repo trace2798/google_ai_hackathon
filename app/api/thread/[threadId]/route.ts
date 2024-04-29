@@ -1,0 +1,126 @@
+import { db } from "@/lib/db";
+import { GoogleGenerativeAI, TaskType } from "@google/generative-ai";
+import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
+import { Index } from "@upstash/vector";
+import { GoogleGenerativeAIStream, Message, StreamingTextResponse } from "ai";
+import { NextResponse } from "next/server";
+
+const index = new Index({
+  url: process.env.UPSTASH_VECTOR_REST_URL!,
+  token: process.env.UPSTASH_VECTOR_REST_TOKEN!,
+});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+
+const buildGoogleGenAIPrompt = (messages: Message[]) => ({
+  contents: messages
+    .filter(
+      (message) => message.role === "user" || message.role === "assistant"
+    )
+    .map((message) => ({
+      role: message.role === "user" ? "user" : "model",
+      parts: [{ text: message.content }],
+    })),
+});
+export async function POST(
+  request: Request,
+  { params }: { params: { threadId: string } }
+) {
+  try {
+    // const body = await request.json();
+    // console.log("BODY", body);
+    const body = await request.json();
+    console.log("messages", body);
+    const question = body.prompt;
+    console.log("Question: ", question);
+
+    const thread = await db.thread.findUnique({
+      where: {
+        id: params.threadId,
+      },
+    });
+    if (!thread) {
+      return new NextResponse("Not Found", { status: 404 });
+    }
+    // const companion = await db.companion.findUnique({
+    //   where: {
+    //     id: thread.companionId,
+    //   },
+    // });
+    // const anyscale = new OpenAI({
+    //   baseURL: "https://api.endpoints.anyscale.com/v1",
+    //   apiKey: process.env.ANYSCALE_API_KEY!,
+    // });
+
+    // // const queryEmbedding = await new OpenAIEmbeddings().embedQuery(question);
+    // const modelName = "thenlper/gte-large";
+    // const queryEmbedding = await new OpenAIEmbeddings({
+    //   configuration: {
+    //     baseURL: "https://api.endpoints.anyscale.com/v1",
+    //   },
+    //   modelName: modelName,
+    // }).embedQuery(question);
+    const modelName = "text-embedding-004"; // 768 dimensions
+    const taskType = TaskType.SEMANTIC_SIMILARITY;
+    console.log("Checked TOken Length");
+
+    // Create a new instance of GoogleGenerativeAIEmbeddings
+    const embeddings = new GoogleGenerativeAIEmbeddings({
+      modelName: modelName,
+      taskType: taskType,
+    });
+
+    // Use the embedDocuments method to get the embeddings for your documents
+    const embeddingedQuestion = await embeddings.embedQuery(question);
+    console.log("GOOGLE EMBEDDING", embeddingedQuestion);
+
+    console.log("2");
+    console.log("queryEmbedding", embeddingedQuestion);
+    // if (!companion) {
+    //   return new NextResponse("Not Found", { status: 404 });
+    // }
+    const content = await index.query({
+      vector: embeddingedQuestion as number[],
+      includeVectors: false,
+      topK: 10,
+      includeMetadata: true,
+      filter: `fileId = '${companion.id}'`,
+    });
+    console.log("Upstash content", content);
+    // const geminiStream = await genAI
+    //   .getGenerativeModel({ model: "gemini-pro" })
+    //   .generateContentStream(buildGoogleGenAIPrompt(prompt) as any);
+    console.log("1");
+    // console.log(`${companion?.instructions} answer: ${prompt}`);
+    let concentratedContent = "";
+    for (let i = 0; i < content.length; i++) {
+      concentratedContent += content[i]?.metadata?.pageContent + " ";
+    }
+    console.log("Concentrated Content", concentratedContent);
+
+    const response = await genAI
+      .getGenerativeModel({ model: "gemini-pro" })
+      .generateContentStream({
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `${companion?.instructions}. Now answer: ${question} with this content: ${concentratedContent}. Do not make up stuff and only answer based on the content provided. If you do not know the answer just say it.`,
+              },
+            ],
+          },
+        ],
+      });
+    console.log(response);
+    console.log("2");
+    // Convert the response into a friendly text-stream
+    const stream = GoogleGenerativeAIStream(response);
+    console.log("stream", stream);
+    // Respond with the stream
+    console.log(new StreamingTextResponse(stream));
+    return new StreamingTextResponse(stream);
+  } catch (error) {
+    console.log("Error Internal:", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
