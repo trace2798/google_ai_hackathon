@@ -20,6 +20,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <ClerkProvider>
       <html lang="en">
@@ -32,7 +33,6 @@ export default function RootLayout({
           >
             <ModalProvider />
             <Toaster />
-            {/* {children} */}
             <div className="lg:hidden">
               <MobileHeader />
             </div>

@@ -1,17 +1,25 @@
+import {
+  ClerkLoaded,
+  ClerkLoading,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  currentUser,
+} from "@clerk/nextjs";
+import { Loader } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
-import { ClerkLoading, ClerkLoaded, UserButton } from "@clerk/nextjs";
-import { Building, Building2, Loader } from "lucide-react";
-
 import { cn } from "@/lib/utils";
-
+import { Button } from "../ui/button";
 import { SidebarItem } from "./sidebar-item";
 
 type Props = {
   className?: string;
 };
 
-export const Sidebar = ({ className }: Props) => {
+export const Sidebar = async ({ className }: Props) => {
+  const user = await currentUser();
   return (
     <div
       className={cn(
@@ -19,7 +27,7 @@ export const Sidebar = ({ className }: Props) => {
         className
       )}
     >
-      <Link href="/organizations">
+      <Link href="/">
         <div className="pt-8 pl-4 pb-7 flex items-center gap-x-3">
           <h1 className="text-xl font-extrabold tracking-wide">
             Kenniscentrum
@@ -27,45 +35,58 @@ export const Sidebar = ({ className }: Props) => {
         </div>
       </Link>
       <div className="flex flex-col gap-y-2 flex-1">
-        <SidebarItem
-          label="Search Web"
-          href="/web-search"
-          // iconSrc="/globe.svg"
-          // icon={Building2}
-        />
-        <SidebarItem
-          label="Wikipedia"
-          href="/wiki"
-          // iconSrc="/leaderboard.svg"
-          // icon={Building}
-        />
-        <SidebarItem
-          label="Document"
-          href="/documents"
-          // iconSrc="/globe.svg"
-          // icon={Building}
-        />
-        <SidebarItem
-          label="History"
-          href="/history"
-          // iconSrc="/globe.svg"
-          // icon={Building}
-        />
-        <SidebarItem
-          label="Settings"
-          href="/settings"
-          // iconSrc="/globe.svg"
-          // icon={Building}
-        />
-        {/* <SidebarItem
-          label="Settings"
-          href="/settings"
-          // iconSrc="/leaderboard.svg"
-          // icon={Building}
-        /> */}
-
-        {/* <SidebarItem label="quests" href="/quests" />
-        <SidebarItem label="shop" href="/shop"  /> */}
+        <SidebarItem label="Search Web" href="/web-search" />
+        <SidebarItem label="Wikipedia" href="/wiki" />
+        <SidebarItem label="Document" href="/documents" />
+        {user && (
+          <>
+            <SidebarItem label="History" href="/history" />
+            <SidebarItem label="Settings" href="/settings" />
+          </>
+        )}
+        {!user && (
+          <>
+            <div className="flex flex-col items-center gap-y-8">
+              <div className="flex flex-col items-center gap-y-3 max-w-[330px] w-full">
+                <ClerkLoading>
+                  <Loader className="h-5 w-5 text-muted-foreground animate-spin" />
+                </ClerkLoading>
+                <ClerkLoaded>
+                  <SignedOut>
+                    <SignUpButton
+                      mode="modal"
+                      afterSignInUrl="/web-search"
+                      afterSignUpUrl="/web-search"
+                    >
+                      <Button size="lg" variant="secondary" className="w-full">
+                        Get Started
+                      </Button>
+                    </SignUpButton>
+                    <SignInButton
+                      mode="modal"
+                      afterSignInUrl="/web-search"
+                      afterSignUpUrl="/web-search"
+                    >
+                      <Button size="lg" variant="outline" className="w-full">
+                        I already have an account
+                      </Button>
+                    </SignInButton>
+                  </SignedOut>
+                  <SignedIn>
+                    <Button
+                      size="lg"
+                      variant="secondary"
+                      className="w-full"
+                      asChild
+                    >
+                      <Link href="/web-search">Continue Learning</Link>
+                    </Button>
+                  </SignedIn>
+                </ClerkLoaded>
+              </div>
+            </div>
+          </>
+        )}
       </div>
       <div className="p-4">
         <ClerkLoading>

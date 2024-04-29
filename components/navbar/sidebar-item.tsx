@@ -4,18 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
 type Props = {
   label: string;
-  // iconSrc?: string;
   href: string;
 };
 
-export const SidebarItem = ({
-  label,
-  href,
-}: Props) => {
+export const SidebarItem = ({ label, href }: Props) => {
   const pathname = usePathname();
   const active = pathname === href;
 
