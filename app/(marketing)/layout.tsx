@@ -8,7 +8,7 @@ type Props = {
 const MarketingLayout = ({ children }: Props) => {
   return (
     <>
-      <div className="lg:hidden">
+      {/* <div className="lg:hidden">
         <MobileHeader />
       </div>
       <Sidebar className="hidden lg:flex" />
@@ -16,7 +16,7 @@ const MarketingLayout = ({ children }: Props) => {
         <div className="max-w-[1056px] mx-[5vw] lg:mx-auto pt-6 h-full">
           {children}
         </div>
-      </main>
+      </main> */}
     </>
   );
 };

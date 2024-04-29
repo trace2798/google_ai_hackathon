@@ -20,7 +20,7 @@ export const SidebarItem = ({ label,
 
   return (
     <Button
-      variant={active ? "outline" : "secondary"}
+      variant={active ? "secondary" : "special"}
       className="justify-start h-[52px] hover:bg-secondary"
       asChild
     >

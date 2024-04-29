@@ -64,6 +64,9 @@ export const Sidebar = ({ className }: Props) => {
           <UserButton afterSignOutUrl="/" />
         </ClerkLoaded>
       </div>
+      {/* <div className="text-muted-foreground text-xs">
+        Submission for Google AI Hackathon
+      </div> */}
     </div>
   );
 };
