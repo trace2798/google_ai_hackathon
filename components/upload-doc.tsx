@@ -1,12 +1,11 @@
 "use client";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Cloud, Loader2, Upload } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { Loader2, Upload } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const UploadDoc = () => {
   const [document, setDocument] = useState<File | null | undefined>(null);
@@ -48,12 +47,12 @@ const UploadDoc = () => {
         method: "POST",
         body: formData,
       });
-      if (res.status === 200) {
-        const data = await res.json();
-        const quizzId = data.quizzId;
+    //   if (res.status === 200) {
+    //     const data = await res.json();
+    //     const quizzId = data.quizzId;
 
-        router.push(`/quizz/${quizzId}`);
-      }
+    //     router.push(`/quizz/${quizzId}`);
+    //   }
     } catch (e) {
       console.log("error while generating", e);
     }

@@ -6,10 +6,10 @@ interface PageProps {}
 const Page: FC<PageProps> = ({}) => {
   return (
     <>
-      <div>
+      {/* <div>
         Upload document functionality and list of documents will be here
-      </div>
-      <UploadDoc/>
+      </div> */}
+      <UploadDoc />
     </>
   );
 };
