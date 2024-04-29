@@ -16,20 +16,16 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: NextRequest) {
   const body = await req.formData();
-  console.log("BODY", body);
+  // console.log("BODY", body);
   const document = body.get("uploadedFile");
-  console.log("DOCUMENT", document);
-  // const companionID = await currentCompanionId();
-  // const companion = await db.companion.findUnique({
-  //   where: {
-  //     id: companionID as string,
-  //   },
-  // });
-  // const orgId = companion?.orgId;
-  // console.log("ORGANIZATION ID:", orgId);
-  // console.log("COMPANION ID", companionID);
+  // console.log("DOCUMENT", document);
   const profile = await currentProfile();
-  console.log("PROFILE", profile);
+  // console.log("PROFILE", profile);
+  if (!profile) {
+    return new NextResponse(JSON.stringify({ message: "Profile not found" }), {
+      status: 401,
+    });
+  }
   const index = new Index({
     url: process.env.UPSTASH_VECTOR_REST_URL!,
     token: process.env.UPSTASH_VECTOR_REST_TOKEN!,
@@ -37,20 +33,20 @@ export async function POST(req: NextRequest) {
 
   if ((document as File).type === "application/pdf") {
     try {
-      console.log("PDF", document);
+      // console.log("PDF", document);
       const pdfLoader = new PDFLoader(document as Blob, {
         parsedItemSeparator: " ",
       });
 
       const docs = await pdfLoader.load();
-      console.log("DOCS", docs);
-      console.log("DOCS LOC", docs[0].metadata.loc);
+      // console.log("DOCS", docs);
+      // console.log("DOCS LOC", docs[0].metadata.loc);
       const pagesAmt = docs.length;
-      console.log("Page Amount", pagesAmt);
+      // console.log("Page Amount", pagesAmt);
       const selectedDocuments = docs.filter(
         (doc) => doc.pageContent !== undefined
       );
-     
+
       const file = await db.file.create({
         data: {
           name: (document as File).name,
@@ -61,23 +57,23 @@ export async function POST(req: NextRequest) {
           fileType: "PDF",
         },
       });
-      console.log("Created FILE", file);
+      // console.log("Created FILE", file);
       try {
         for (const doc of docs) {
           const txtPath = doc.metadata.loc.pageNumber;
-          console.log("Page Number", txtPath);
+          // console.log("Page Number", txtPath);
           // const text = doc.pageContent;
           const text = doc.pageContent.replace(/(\s*\n\s*)+/g, " ");
-          console.log("Text Content:", text);
+          // console.log("Text Content:", text);
           const textSplitter = new RecursiveCharacterTextSplitter({
             chunkSize: 5000, //since the model can take upto 512 token as input
             chunkOverlap: 50,
           });
           //Split text into chunks (documents)
           const chunks = await textSplitter.createDocuments([text]);
-          console.log(`Total chunks: ${chunks.length}`);
+          // console.log(`Total chunks: ${chunks.length}`);
 
-          console.log("EMBED CALL HERE");
+          // console.log("EMBED CALL HERE");
           // const modelName = "thenlper/gte-large";
 
           // const embeddingsArrays = await new OpenAIEmbeddings({
@@ -149,9 +145,31 @@ export async function POST(req: NextRequest) {
             indexDone: true,
           },
         });
-        return new NextResponse(JSON.stringify(updateFileInfo), {
+        const createThread = await db.thread.create({
+          data: {
+            prompt: "",
+            title: file.name,
+            fileId: file.id,
+            profileId: profile.id || "",
+            threadType: "DOC",
+          },
+        });
+        await db.activity.createMany({
+          data: [
+            {
+              message: `File ${file.name} created and embedded successfully`,
+              profileId: profile.id || "",
+            },
+            {
+              message: `Thread called ${file.name} created.`,
+              profileId: profile.id || "",
+            },
+          ],
+        });
+
+        return new NextResponse(JSON.stringify(createThread), {
           status: 200,
-        })
+        });
       } catch (error) {
         console.log("Error embedding pdf document", error);
       }

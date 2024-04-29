@@ -128,7 +128,8 @@ const UploadDoc = () => {
           <p className="text-secondary-foreground my-2">
             Supported file types: pdf <br />
             <p className="text-muted-foreground text-sm">
-              [Keeping privacy on mind, files are not stored on our server]
+              [Keeping privacy on mind, I am not storing the files on the
+              server]
             </p>
           </p>
           {error ? <p className="text-red-600">{error}</p> : null}

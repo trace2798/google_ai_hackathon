@@ -28,5 +28,14 @@ export const initialProfile = async () => {
     },
   });
 
+  await db.activity.createMany({
+    data: [
+      {
+        message: `Profile created`,
+        profileId: newProfile.id,
+      },
+    ],
+  });
+
   return newProfile;
 };

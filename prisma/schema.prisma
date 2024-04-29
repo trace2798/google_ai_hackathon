@@ -23,6 +23,7 @@ model Profile {
 
   files     File[]
   threads   Thread[]
+  activities Activity[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -34,15 +35,28 @@ enum ThreadType {
 }
 
 model Thread {
-  id       String    @id @default(uuid())
-  prompt   String
-  title    String
-  messages Message[]
+  id         String      @id @default(uuid())
+  prompt     String?
+  title      String?
+  messages   Message[]
+  fileId     String?
+  threadType ThreadType?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  profileId  String
+  profile    Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  message   String   @db.Text
+  profileId  String
+  profile    Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  profileId String
-  profile   Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
   @@index([profileId])
 }
 
@@ -87,12 +101,12 @@ model File {
   fileType     FileType
   pageAmt      Int?
 
-  profileId   String
-  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  indexDone   Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  indexDone Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([profileId])
 }
