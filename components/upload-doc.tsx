@@ -47,17 +47,17 @@ const UploadDoc = () => {
         method: "POST",
         body: formData,
       });
-    //   if (res.status === 200) {
-    //     const data = await res.json();
-    //     const quizzId = data.quizzId;
+      if (res.status === 200) {
+        const data = await res.json();
+        const documentId = data.documentId;
 
-    //     router.push(`/quizz/${quizzId}`);
-    //   }
+        router.push(`/documents/${documentId}`);
+      }
     } catch (e) {
       console.log("error while generating", e);
     }
     clearInterval(interval);
-  setIsLoading(false);
+    setIsLoading(false);
   };
 
   const handleDocumentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,11 +74,16 @@ const UploadDoc = () => {
           <div className="absolute inset-0 m-auto flex flex-col justify-center items-center">
             <Upload className="h-6 w-6 text-muted-foreground mb-2" />
             <p className="mb-2 text-sm text-muted-foreground">
-              <span className="font-semibold">&nbsp;{uploadProgress <=  33 ? "Uploading" : "Embedding Document"}</span>
+              <span className="font-semibold">
+                &nbsp;
+                {uploadProgress <= 33 ? "Uploading" : "Embedding Document"}
+              </span>
             </p>
             <div className="w-full mt-4 max-w-xs mx-auto">
               <Progress
-                indicatorColor={uploadProgress === 100 ? "bg-green-500" : "bg-blue-400"}
+                indicatorColor={
+                  uploadProgress === 100 ? "bg-green-500" : "bg-blue-400"
+                }
                 value={uploadProgress}
                 className="h-1 w-full bg-zinc-200"
               />

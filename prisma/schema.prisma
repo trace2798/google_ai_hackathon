@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Profile {
+  id       String @id @default(uuid())
+  userId   String @unique
+  name     String
+  imageUrl String @db.Text
+  email    String @db.Text
+
+  files     File[]
+  threads   Thread[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ThreadType {
+  WEB
+  WIKI
+  DOC
+}
+
+model Thread {
+  id       String    @id @default(uuid())
+  prompt   String
+  title    String
+  messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profileId String
+  profile   Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  @@index([profileId])
+}
+
+enum Role {
+  user
+  system
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  role      Role
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profileId String
+  threadId  String
+  Thread    Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  fileId    String
+
+  @@index([threadId])
+}
+
+enum UploadStatus {
+  PENDING
+  PROCESSING
+  FAILED
+  SUCCESS
+}
+
+enum FileType {
+  PDF
+  DOCX
+  TXT
+}
+
+model File {
+  id   String @id @default(cuid())
+  name String
+
+  uploadStatus UploadStatus @default(PENDING)
+  fileType     FileType
+  pageAmt      Int?
+
+  profileId   String
+  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  indexDone   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([profileId])
+}
