@@ -12,9 +12,10 @@ type Props = {
   href: string;
 };
 
-export const SidebarItem = ({ label,
-  //  iconSrc, 
-   href }: Props) => {
+export const SidebarItem = ({
+  label,
+  href,
+}: Props) => {
   const pathname = usePathname();
   const active = pathname === href;
 
@@ -24,19 +25,7 @@ export const SidebarItem = ({ label,
       className="justify-start h-[52px] hover:bg-secondary"
       asChild
     >
-      <Link href={href}>
-        {/* <Icon 
-          className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground"
-        /> */}
-        {/* <Image
-          src={iconSrc}
-          alt={label}
-          className="mr-5 text-primary"
-          height={32}
-          width={32}
-        /> */}
-        {label}
-      </Link>
+      <Link href={href}>{label}</Link>
     </Button>
   );
 };

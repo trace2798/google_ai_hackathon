@@ -29,7 +29,7 @@ export const Sidebar = ({ className }: Props) => {
       <div className="flex flex-col gap-y-2 flex-1">
         <SidebarItem
           label="Search Web"
-          href="/search"
+          href="/web-search"
           // iconSrc="/globe.svg"
           // icon={Building2}
         />
@@ -45,7 +45,18 @@ export const Sidebar = ({ className }: Props) => {
           // iconSrc="/globe.svg"
           // icon={Building}
         />
-
+        <SidebarItem
+          label="History"
+          href="/history"
+          // iconSrc="/globe.svg"
+          // icon={Building}
+        />
+        <SidebarItem
+          label="Settings"
+          href="/settings"
+          // iconSrc="/globe.svg"
+          // icon={Building}
+        />
         {/* <SidebarItem
           label="Settings"
           href="/settings"
