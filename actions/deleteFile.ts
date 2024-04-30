@@ -44,7 +44,12 @@ export async function deleteFile(
         toDelete: true,
       },
     });
-
+    await db.activity.create({
+      data: {
+        message: `File ${file?.name} deleted`,
+        profileId: profile?.id || "",
+      },
+    });
     return "Done";
   } catch (error) {
     console.log(error);
