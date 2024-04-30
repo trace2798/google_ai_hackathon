@@ -2,7 +2,6 @@
 
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { NextResponse } from "next/server";
 
 export async function deleteFile(
   profileId: string | undefined,
@@ -10,8 +9,8 @@ export async function deleteFile(
 ) {
   try {
     const profile = await currentProfile();
-    console.log(profile)
-    console.log(profileId)
+    console.log(profile);
+    console.log(profileId);
     if (!profile) {
       return "Forbidden No Profile";
     }
@@ -51,12 +50,12 @@ export async function deleteFile(
     });
     await db.activity.create({
       data: {
-        message: `File ${file?.name} deleted`,
+        message: `File ${file?.name} and associated thread has been soft deleted`,
         profileId: profile?.id,
       },
     });
     return "Done";
   } catch (error) {
-    console.log("Error action deleteFile",error);
+    console.log("Error action deleteFile", error);
   }
 }

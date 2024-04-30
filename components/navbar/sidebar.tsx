@@ -40,7 +40,7 @@ export const Sidebar = async ({ className }: Props) => {
         <SidebarItem label="Document" href="/documents" />
         {user && (
           <>
-            <SidebarItem label="History" href="/history" />
+            <SidebarItem label="Activity" href="/activity" />
             <SidebarItem label="Settings" href="/settings" />
             <SidebarItem label="Restore Files" href="/deleted" />
           </>

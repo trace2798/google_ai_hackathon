@@ -118,7 +118,12 @@ export async function permanentDeleteFileandThread(
         id: file.id,
       },
     });
-
+    await db.activity.create({
+      data: {
+        message: `File ${file?.name} and threads associated with it has been permanently deleted`,
+        profileId: profile?.id,
+      },
+    });
     return "Done";
   } catch (error) {
     console.log("Error action deleteFile", error);
