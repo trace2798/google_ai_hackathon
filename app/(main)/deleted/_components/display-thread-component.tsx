@@ -89,11 +89,11 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleRestoreThread}  className="hover:text-green-500 hover:cursor-pointer">
+              <DropdownMenuItem onClick={handleRestoreThread}  className="text-green-500 hover:cursor-pointer">
                 <ArchiveRestore className="w-4 h-4 mr-2" />
                 Restore Thread
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={permanentlyDeleteThread}  className="hover:text-red-500 hover:cursor-pointer">
+              <DropdownMenuItem onClick={permanentlyDeleteThread}  className="text-red-500 hover:cursor-pointer">
                 <Trash className="w-4 h-4 mr-2" />
                 Delete
               </DropdownMenuItem>

@@ -64,7 +64,7 @@ const ThreadList: FC<ThreadListProps> = ({ thread, profileId }) => {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={handleSoftDeleteThread}
-                className="hover:text-red-500 hover:cursor-pointer"
+                className="text-red-500 hover:cursor-pointer"
               >
                 <Trash className="w-4 h-4 mr-2" />
                 Delete Thread

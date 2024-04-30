@@ -108,21 +108,21 @@ const DisplayFileComponent: FC<DisplayFileComponentProps> = ({
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={handleFileRestore}
-                className="hover:text-green-500 hover:cursor-pointer"
+                className="text-green-500 hover:cursor-pointer"
               >
                 <ArchiveRestore className="w-4 h-4 mr-2" />
                 Restore File
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleFileAndThreadRestore}
-                className="hover:text-green-500 hover:cursor-pointer"
+                className="text-green-500 hover:cursor-pointer"
               >
                 <ArchiveRestore className="w-4 h-4 mr-2" />
                 Restore File and Threads
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handlePermanentlyDeleteFileAndThreadRestore}
-                className="hover:text-red-500 hover:cursor-pointer"
+                className="text-red-500 hover:cursor-pointer"
               >
                 <Trash className="w-4 h-4 mr-2" />
                 Delete

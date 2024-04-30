@@ -1,6 +1,11 @@
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { GoogleGenerativeAI, TaskType } from "@google/generative-ai";
+import {
+  GoogleGenerativeAI,
+  TaskType,
+  HarmBlockThreshold,
+  HarmCategory,
+} from "@google/generative-ai";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { Index } from "@upstash/vector";
 import { GoogleGenerativeAIStream, Message, StreamingTextResponse } from "ai";
@@ -29,17 +34,35 @@ export async function POST(
   try {
     const profile = await currentProfile();
     const body = await request.json();
-    console.log("messages", body);
     const question = body.prompt;
-    console.log("Question: ", question);
 
     const thread = await db.thread.findUnique({
       where: {
         id: params.threadId,
       },
+      include: {
+        messages: true,
+      },
     });
+
     if (!thread) {
       return new NextResponse("Not Found", { status: 404 });
+    }
+    if (!profile || profile?.id !== thread?.profileId) {
+      return new NextResponse("Unauthorized", { status: 403 });
+    }
+    if (thread?.messages.length > 0 && thread.title === thread.id) {
+      const firstMessage = thread.messages[0].content;
+      const first20Chars = firstMessage.substring(0, 20);
+
+      await db.thread.update({
+        where: {
+          id: params.threadId,
+        },
+        data: {
+          title: first20Chars as string,
+        },
+      });
     }
     await db.message.create({
       data: {
@@ -55,11 +78,10 @@ export async function POST(
       `You are an helpful AI assistant who is responsible to answer users question. 
     Both the question and content from which you should answer will be provided. 
     Only include links in markdown format.
-    Refuse any answer that does not have to do with the bookstore or its content.
-    Provide short, concise answers.`;
+    Refuse any answer that does not have to do with its content.
+    Provide concise answers.`;
     const modelName = "text-embedding-004"; // 768 dimensions
     const taskType = TaskType.SEMANTIC_SIMILARITY;
-    console.log("Checked TOken Length");
 
     const embeddings = new GoogleGenerativeAIEmbeddings({
       modelName: modelName,
@@ -74,52 +96,71 @@ export async function POST(
       includeMetadata: true,
       filter: `fileId = '${thread.fileId}'`,
     });
-    console.log("Upstash content", content);
-    // const geminiStream = await genAI
-    //   .getGenerativeModel({ model: "gemini-pro" })
-    //   .generateContentStream(buildGoogleGenAIPrompt(prompt) as any);
-    console.log("1");
-    // console.log(`${companion?.instructions} answer: ${prompt}`);
     let concentratedContent = "";
     for (let i = 0; i < content.length; i++) {
       concentratedContent += content[i]?.metadata?.pageContent + " ";
     }
-    console.log("Concentrated Content", concentratedContent);
-
+    console.log("Content", concentratedContent);
+    // const chat = genAI.getGenerativeModel({ model: "gemini-1.0-pro" })
+    //systemInstruction is only working with gemini-1.5-pro-latest not with gemini-pro. Error: GoogleGenerativeAIError: [400 Bad Request] Developer instruction is not enabled for models/gemini-1.0-pro
     const response = await genAI
-      .getGenerativeModel({ model: "gemini-pro" })
-      .generateContentStream({
-        contents: [
+      .getGenerativeModel({
+        model: "gemini-1.0-pro",
+        // systemInstruction: {
+        //   role: "system",
+        //   parts: [
+        //     {
+        //       text: prompt,
+        //     },
+        //   ],
+        // },
+      })
+      .startChat({
+        history: [
           {
             role: "user",
-            parts: [
-              {
-                text: `${prompt}. Now answer: ${question} with this content: ${concentratedContent}. Do not make up stuff and only answer based on the content provided. If you do not know the answer just say it.`,
-              },
-            ],
+            parts: [{ text: "Hello, I need some help." }],
+          },
+          {
+            role: "model",
+            parts: [{ text: `${prompt}` }],
           },
         ],
-      });
-    console.log(response);
-    console.log("2");
-    // Convert the response into a friendly text-stream
+        generationConfig: {
+          maxOutputTokens: 100,
+        },
+      })
+      .sendMessageStream(
+        `${prompt}. Now answer: ${question} referencing this content: ${concentratedContent}.`
+      );
+    // .generateContentStream({
+    //   contents: [
+    //     {
+    //       role: "user",
+    //       parts: [
+    //         {
+    //           text: `${prompt}. Now answer: ${question} referencing this content: ${concentratedContent}.`,
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // });
+    // const send = `${prompt}. Now answer: ${question} referencing this content: ${concentratedContent}.`
+    // const response = await genAI
+    //   .getGenerativeModel({ model: "gemini-pro" })
+    //   .generateContentStream(buildGoogleGenAIPrompt(question));
+
     const stream = GoogleGenerativeAIStream(response, {
-      // async onFinal(response: any) {
-      //   const answer = await response.response.text()
-      //   console.log("answer", answer);
-      // await db.message.create({
-      //   data: {
-      //     content: response.response.text(),
-      //     role: "system",
-      //     threadId: thread.id,
-      //     profileId: profile?.id as string,
-      //     fileId: thread.fileId as string,
-      //   },
-      // });
-      // },
+      onStart: async () => {
+        // This callback is called when the stream starts
+        // You can use this to save the prompt to your database
+        console.log(prompt);
+        console.log(body);
+      },
+      onToken: async (token: string) => {
+        console.log(token);
+      },
       onCompletion: async (completion: string) => {
-        // This callback is called when the completion is ready
-        // You can use this to save the final completion to your database
         await db.message.create({
           data: {
             content: completion,
@@ -131,10 +172,6 @@ export async function POST(
         });
       },
     });
-    // console.log("response", response)
-    console.log("stream", stream);
-    // Respond with the stream
-    console.log(new StreamingTextResponse(stream));
     return new StreamingTextResponse(stream);
   } catch (error) {
     console.log("Error Internal:", error);
