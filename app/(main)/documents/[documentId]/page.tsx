@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import CreateThread from "./_components/create-thread";
 import DeleteFile from "./_components/delete-file";
+import { Heading } from "@/components/heading";
 
 interface DocumentIdPageProps {
   params: {
@@ -24,15 +25,34 @@ const DocumentIdPage = async ({ params }: DocumentIdPageProps) => {
   });
   return (
     <>
-      <div className="mb-5 flex justify-between">
-        <div>Threads</div>
-        <DeleteFile profileId={profile?.id as string} fileId={params.documentId} />
+      <div className="mb-5 flex flex-col justify-between">
+        <Heading
+          title="Document Id Page"
+          description="Here you can create thread and delete(soft) the file. Deleting the file will result in deleting all threads associated with it."
+        />
+        <Heading
+          title="How it works?"
+          description="User enters a question --> The question is then passed to an instance of GoogleGenerativeAIEmbeddings, which embeds the question into a vector representation --> Query the vector database with the embedded question --> The query returns content that is semantically similar to the question --> The content is then used to generate a response using gemini-pro model to the user’s question."
+          subdescription=""
+        />
+        <Heading
+          title="What is a thread?"
+          description="“thread” refers to a single conversation or interaction between the user and the AI."
+          subdescription="In my application, user can create multiple thread for a file. I added this functionality so that different prompt can be added by the user to different threads"
+        />
+        <div className="flex w-full justify-between">
+          <CreateThread profileId={profile?.id} fileId={params.documentId} />
+          <DeleteFile
+            profileId={profile?.id as string}
+            fileId={params.documentId}
+          />
+        </div>
       </div>
-      <CreateThread profileId={profile?.id} fileId={params.documentId} />
+
       <div className="grid grid-cols-1 mt-5">
         {threads.map((thread) => (
           <Link
-          key={thread.id}
+            key={thread.id}
             prefetch={false}
             href={`/thread/${thread.id}`}
             className="hover:text-indigo-500"

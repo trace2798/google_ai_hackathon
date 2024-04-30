@@ -50,21 +50,12 @@ export async function POST(
     const taskType = TaskType.SEMANTIC_SIMILARITY;
     console.log("Checked TOken Length");
 
-    // Create a new instance of GoogleGenerativeAIEmbeddings
     const embeddings = new GoogleGenerativeAIEmbeddings({
       modelName: modelName,
       taskType: taskType,
     });
-
-    // Use the embedDocuments method to get the embeddings for your documents
     const embeddingedQuestion = await embeddings.embedQuery(question);
-    // console.log("GOOGLE EMBEDDING", embeddingedQuestion);
-
-    // console.log("2");
-    // console.log("queryEmbedding", embeddingedQuestion);
-    // // if (!companion) {
-    // //   return new NextResponse("Not Found", { status: 404 });
-    // // }
+   
     const content = await index.query({
       vector: embeddingedQuestion as number[],
       includeVectors: false,
