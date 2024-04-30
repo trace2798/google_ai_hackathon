@@ -10,8 +10,13 @@ export async function deleteFile(
 ) {
   try {
     const profile = await currentProfile();
-    if (profile?.id === profileId) {
-      return new NextResponse("Forbidden", { status: 403 });
+    console.log(profile)
+    console.log(profileId)
+    if (!profile) {
+      return "Forbidden No Profile";
+    }
+    if (profile?.id !== profileId) {
+      return "Unauthorized";
     }
     const file = await db.file.findUnique({
       where: {
@@ -47,11 +52,11 @@ export async function deleteFile(
     await db.activity.create({
       data: {
         message: `File ${file?.name} deleted`,
-        profileId: profile?.id || "",
+        profileId: profile?.id,
       },
     });
     return "Done";
   } catch (error) {
-    console.log(error);
+    console.log("Error action deleteFile",error);
   }
 }

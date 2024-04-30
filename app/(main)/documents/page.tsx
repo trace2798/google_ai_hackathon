@@ -17,6 +17,7 @@ const Page: FC<PageProps> = async ({}) => {
   const files = await db.file.findMany({
     where: {
       profileId: profile?.id,
+      toDelete: false,
     },
   });
   return (

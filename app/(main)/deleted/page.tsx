@@ -1,7 +1,8 @@
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import Link from "next/link";
 import { FC } from "react";
+import DisplayFileComponent from "./_components/display-file-component";
+import DisplayThreadComponent from "./_components/display-thread-component";
 
 interface PageProps {}
 
@@ -25,31 +26,19 @@ const Page: FC<PageProps> = async ({}) => {
       <div className="grid grid-cols-1 mt-5">
         <h1>Threads</h1>
         {softDeletedThreads.map((thread, index) => (
-          <Link
+          <DisplayThreadComponent
             key={index}
-            prefetch={false}
-            href={`/thread/${thread.id}`}
-            className="hover:text-indigo-500"
-          >
-            <div key={thread.id} className="space-y-3 border p-3">
-              {thread.title}
-            </div>
-          </Link>
+            thread={thread}
+            profileId={profile?.id as string}
+          />
         ))}
       </div>
       <div className="grid grid-cols-1 mt-5">
         <h1>Files</h1>
-        {softDeletedFiles.map((thread, index) => (
-          <Link
-            key={index}
-            prefetch={false}
-            href={`/thread/${thread.id}`}
-            className="hover:text-indigo-500"
-          >
-            <div key={thread.id} className="space-y-3 border p-3">
-              {thread.name}
-            </div>
-          </Link>
+        {softDeletedFiles.map((file, index) => (
+          <>
+            <DisplayFileComponent key={index} file={file} profileId={profile?.id as string} />
+          </>
         ))}
       </div>
     </>

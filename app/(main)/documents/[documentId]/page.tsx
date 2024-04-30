@@ -26,12 +26,13 @@ const DocumentIdPage = async ({ params }: DocumentIdPageProps) => {
     <>
       <div className="mb-5 flex justify-between">
         <div>Threads</div>
-        <DeleteFile profileId={profile?.id} fileId={params.documentId} />
+        <DeleteFile profileId={profile?.id as string} fileId={params.documentId} />
       </div>
       <CreateThread profileId={profile?.id} fileId={params.documentId} />
       <div className="grid grid-cols-1 mt-5">
         {threads.map((thread) => (
           <Link
+          key={thread.id}
             prefetch={false}
             href={`/thread/${thread.id}`}
             className="hover:text-indigo-500"
