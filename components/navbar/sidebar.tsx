@@ -13,6 +13,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { SidebarItem } from "./sidebar-item";
+import { Separator } from "../ui/separator";
 
 type Props = {
   className?: string;
@@ -38,6 +39,7 @@ export const Sidebar = async ({ className }: Props) => {
         <SidebarItem label="Search Web" href="/web-search" />
         <SidebarItem label="Wikipedia" href="/wiki" />
         <SidebarItem label="Document" href="/documents" />
+        <Separator />
         {user && (
           <>
             <SidebarItem label="Activity" href="/activity" />

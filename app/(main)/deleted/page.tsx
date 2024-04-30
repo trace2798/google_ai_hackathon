@@ -1,3 +1,4 @@
+import { Heading } from "@/components/heading";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { FC } from "react";
@@ -22,7 +23,10 @@ const Page: FC<PageProps> = async ({}) => {
   });
   return (
     <>
-      <div>Deleting from here will permanently delete it.</div>
+      <Heading
+        title="Soft Deleted Activities"
+        description="Here you have the option to restore or permanently delete any thread and file."
+      />
       <div className="grid grid-cols-1 mt-5">
         <h1>Threads</h1>
         {softDeletedThreads.map((thread, index) => (
@@ -37,7 +41,11 @@ const Page: FC<PageProps> = async ({}) => {
         <h1>Files</h1>
         {softDeletedFiles.map((file, index) => (
           <>
-            <DisplayFileComponent key={index} file={file} profileId={profile?.id as string} />
+            <DisplayFileComponent
+              key={index}
+              file={file}
+              profileId={profile?.id as string}
+            />
           </>
         ))}
       </div>
