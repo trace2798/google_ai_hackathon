@@ -21,11 +21,11 @@ model Profile {
   imageUrl String @db.Text
   email    String @db.Text
 
-  files     File[]
-  threads   Thread[]
+  files      File[]
+  threads    Thread[]
   activities Activity[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 enum ThreadType {
@@ -36,7 +36,7 @@ enum ThreadType {
 
 model Thread {
   id         String      @id @default(uuid())
-  prompt     String?
+  prompt     String?     @db.LongText
   title      String?
   messages   Message[]
   fileId     String?
@@ -45,18 +45,20 @@ model Thread {
   updatedAt  DateTime    @updatedAt
   profileId  String
   profile    Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  toDelete   Boolean     @default(false)
 
   @@index([profileId])
 }
 
 model Activity {
-  id        String   @id @default(uuid())
-  message   String   @db.Text
-  profileId  String
-  profile    Profile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  id        String  @id @default(uuid())
+  message   String  @db.Text
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@index([profileId])
 }
 
@@ -68,14 +70,15 @@ enum Role {
 model Message {
   id        String   @id @default(uuid())
   role      Role
-  content   String   @db.Text
+  content   String   @db.LongText
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   profileId String
   threadId  String
-  Thread    Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  Thread    Thread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
   fileId    String
+  toDelete  Boolean @default(false)
 
   @@index([threadId])
 }
@@ -107,6 +110,7 @@ model File {
   indexDone Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  toDelete  Boolean  @default(false)
 
   @@index([profileId])
 }

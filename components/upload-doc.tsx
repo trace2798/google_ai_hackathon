@@ -51,9 +51,9 @@ const UploadDoc = () => {
       if (res.status === 200) {
         const data = await res.json();
         console.log("DATA", data);
-        const documentId = data.id;
+        const threadId = data.id;
         toast.success("Document embedded successfully");
-        router.push(`/documents/${documentId}`);
+        router.push(`/thread/${threadId}`);
       }
     } catch (e) {
       console.log("error while generating", e);

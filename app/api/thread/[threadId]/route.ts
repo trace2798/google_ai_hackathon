@@ -26,8 +26,6 @@ export async function POST(
   { params }: { params: { threadId: string } }
 ) {
   try {
-    // const body = await request.json();
-    // console.log("BODY", body);
     const body = await request.json();
     console.log("messages", body);
     const question = body.prompt;
@@ -41,24 +39,13 @@ export async function POST(
     if (!thread) {
       return new NextResponse("Not Found", { status: 404 });
     }
-    // const companion = await db.companion.findUnique({
-    //   where: {
-    //     id: thread.companionId,
-    //   },
-    // });
-    // const anyscale = new OpenAI({
-    //   baseURL: "https://api.endpoints.anyscale.com/v1",
-    //   apiKey: process.env.ANYSCALE_API_KEY!,
-    // });
-
-    // // const queryEmbedding = await new OpenAIEmbeddings().embedQuery(question);
-    // const modelName = "thenlper/gte-large";
-    // const queryEmbedding = await new OpenAIEmbeddings({
-    //   configuration: {
-    //     baseURL: "https://api.endpoints.anyscale.com/v1",
-    //   },
-    //   modelName: modelName,
-    // }).embedQuery(question);
+    const prompt =
+      thread.prompt ||
+      `You are an helpful AI assistant who is responsible to answer users question. 
+    Both the question and content from which you should answer will be provided. 
+    Only include links in markdown format.
+    Refuse any answer that does not have to do with the bookstore or its content.
+    Provide short, concise answers.`;
     const modelName = "text-embedding-004"; // 768 dimensions
     const taskType = TaskType.SEMANTIC_SIMILARITY;
     console.log("Checked TOken Length");
@@ -71,19 +58,19 @@ export async function POST(
 
     // Use the embedDocuments method to get the embeddings for your documents
     const embeddingedQuestion = await embeddings.embedQuery(question);
-    console.log("GOOGLE EMBEDDING", embeddingedQuestion);
+    // console.log("GOOGLE EMBEDDING", embeddingedQuestion);
 
-    console.log("2");
-    console.log("queryEmbedding", embeddingedQuestion);
-    // if (!companion) {
-    //   return new NextResponse("Not Found", { status: 404 });
-    // }
+    // console.log("2");
+    // console.log("queryEmbedding", embeddingedQuestion);
+    // // if (!companion) {
+    // //   return new NextResponse("Not Found", { status: 404 });
+    // // }
     const content = await index.query({
       vector: embeddingedQuestion as number[],
       includeVectors: false,
       topK: 10,
       includeMetadata: true,
-      filter: `fileId = '${companion.id}'`,
+      filter: `fileId = '${thread.fileId}'`,
     });
     console.log("Upstash content", content);
     // const geminiStream = await genAI
@@ -105,7 +92,7 @@ export async function POST(
             role: "user",
             parts: [
               {
-                text: `${companion?.instructions}. Now answer: ${question} with this content: ${concentratedContent}. Do not make up stuff and only answer based on the content provided. If you do not know the answer just say it.`,
+                text: `${prompt}. Now answer: ${question} with this content: ${concentratedContent}. Do not make up stuff and only answer based on the content provided. If you do not know the answer just say it.`,
               },
             ],
           },

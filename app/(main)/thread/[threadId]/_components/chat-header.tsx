@@ -74,7 +74,7 @@ export const ChatHeader = ({
               onClick={() => router.push(`/thread/${thread.id}/edit`)}
             >
               <Edit className="w-4 h-4 mr-2" />
-              Edit
+              Edit Prompt
             </DropdownMenuItem>
             <DropdownMenuItem onClick={onDelete}>
               <Trash className="w-4 h-4 mr-2" />

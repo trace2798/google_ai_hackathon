@@ -1,4 +1,7 @@
+"use client";
+import { createFileThread } from "@/actions/createThread";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import { FC } from "react";
 
 interface CreateThreadProps {
@@ -7,10 +10,17 @@ interface CreateThreadProps {
 }
 
 const CreateThread: FC<CreateThreadProps> = ({ profileId, fileId }) => {
+  const router = useRouter();
+  const handleThreadCreate = async () => {
+    const data = await createFileThread(profileId, fileId);
+    router.push(`/thread/${data}`);
+  };
   return (
     <>
       <div>
-        <Button variant="secondary">Create Thread</Button>
+        <Button onClick={handleThreadCreate} variant="secondary">
+          Create Thread
+        </Button>
       </div>
     </>
   );

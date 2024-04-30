@@ -147,7 +147,11 @@ export async function POST(req: NextRequest) {
         });
         const createThread = await db.thread.create({
           data: {
-            prompt: "",
+            prompt: `You are an helpful AI assistant who is responsible to answer users question. 
+            Both the question and content from which you should answer will be provided. 
+            Only include links in markdown format.
+            Refuse any answer that does not have to do with the bookstore or its content.
+            Provide short, concise answers.`,
             title: file.name,
             fileId: file.id,
             profileId: profile.id || "",

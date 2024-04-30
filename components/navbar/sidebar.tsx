@@ -42,6 +42,7 @@ export const Sidebar = async ({ className }: Props) => {
           <>
             <SidebarItem label="History" href="/history" />
             <SidebarItem label="Settings" href="/settings" />
+            <SidebarItem label="Soft Deleted Files" href="/deleted" />
           </>
         )}
         {!user && (
