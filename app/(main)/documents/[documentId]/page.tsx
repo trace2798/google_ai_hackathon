@@ -1,9 +1,9 @@
+import { Heading } from "@/components/heading";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import Link from "next/link";
 import CreateThread from "./_components/create-thread";
 import DeleteFile from "./_components/delete-file";
-import { Heading } from "@/components/heading";
+import ThreadList from "./_components/thread-list";
 
 interface DocumentIdPageProps {
   params: {
@@ -51,16 +51,11 @@ const DocumentIdPage = async ({ params }: DocumentIdPageProps) => {
 
       <div className="grid grid-cols-1 mt-5">
         {threads.map((thread) => (
-          <Link
+          <ThreadList
             key={thread.id}
-            prefetch={false}
-            href={`/thread/${thread.id}`}
-            className="hover:text-indigo-500"
-          >
-            <div key={thread.id} className="space-y-3 border p-3">
-              {thread.title}
-            </div>
-          </Link>
+            thread={thread}
+            profileId={profile?.id as string}
+          />
         ))}
       </div>
     </>

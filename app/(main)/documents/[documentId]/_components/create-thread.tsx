@@ -1,5 +1,5 @@
 "use client";
-import { createFileThread } from "@/actions/createThread";
+import { createFileThread } from "@/actions/thread";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { FC } from "react";

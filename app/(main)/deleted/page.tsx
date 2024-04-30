@@ -27,8 +27,14 @@ const Page: FC<PageProps> = async ({}) => {
         title="Soft Deleted Activities"
         description="Here you have the option to restore or permanently delete any thread and file."
       />
+      <div className="w-full h-[50vh] flex justify-center items-center">
+        {softDeletedThreads.length === 0 && softDeletedFiles.length === 0 ? (
+          <Heading title="Nothing to permanently delete or restore" />
+        ) : null}
+      </div>
+
       <div className="grid grid-cols-1 mt-5">
-        <h1>Threads</h1>
+        {softDeletedThreads.length > 0 && <Heading title="Threads" />}
         {softDeletedThreads.map((thread, index) => (
           <DisplayThreadComponent
             key={index}
@@ -38,7 +44,7 @@ const Page: FC<PageProps> = async ({}) => {
         ))}
       </div>
       <div className="grid grid-cols-1 mt-5">
-        <h1>Files</h1>
+        {softDeletedFiles.length > 0 && <Heading title="Files" />}
         {softDeletedFiles.map((file, index) => (
           <>
             <DisplayFileComponent

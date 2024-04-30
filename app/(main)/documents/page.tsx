@@ -20,6 +20,9 @@ const Page: FC<PageProps> = async ({}) => {
       profileId: profile?.id,
       toDelete: false,
     },
+    orderBy: {
+      updatedAt: "desc",
+    },
   });
   return (
     <>

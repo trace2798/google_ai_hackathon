@@ -5,8 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Index } from "@upstash/vector";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-// import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-// import { currentCompanionId } from "@/lib/companion-id";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { GoogleGenerativeAI, TaskType } from "@google/generative-ai";
@@ -33,16 +31,12 @@ export async function POST(req: NextRequest) {
 
   if ((document as File).type === "application/pdf") {
     try {
-      // console.log("PDF", document);
       const pdfLoader = new PDFLoader(document as Blob, {
         parsedItemSeparator: " ",
       });
 
       const docs = await pdfLoader.load();
-      // console.log("DOCS", docs);
-      // console.log("DOCS LOC", docs[0].metadata.loc);
       const pagesAmt = docs.length;
-      // console.log("Page Amount", pagesAmt);
       const selectedDocuments = docs.filter(
         (doc) => doc.pageContent !== undefined
       );
@@ -57,40 +51,21 @@ export async function POST(req: NextRequest) {
           fileType: "PDF",
         },
       });
-      // console.log("Created FILE", file);
       try {
         for (const doc of docs) {
           const txtPath = doc.metadata.loc.pageNumber;
-          // console.log("Page Number", txtPath);
-          // const text = doc.pageContent;
           const text = doc.pageContent.replace(/(\s*\n\s*)+/g, " ");
-          // console.log("Text Content:", text);
           const textSplitter = new RecursiveCharacterTextSplitter({
             chunkSize: 5000, //since the model can take upto 512 token as input
             chunkOverlap: 50,
           });
           //Split text into chunks (documents)
           const chunks = await textSplitter.createDocuments([text]);
-          // console.log(`Total chunks: ${chunks.length}`);
 
-          // console.log("EMBED CALL HERE");
-          // const modelName = "thenlper/gte-large";
-
-          // const embeddingsArrays = await new OpenAIEmbeddings({
-          //   configuration: {
-          //     baseURL: "https://api.endpoints.anyscale.com/v1",
-          //   },
-          //   modelName: modelName,
-          // }).embedDocuments(
-          //   chunks.map((chunk) => chunk.pageContent.replace(/\n/g, " "))
-
-          // );
-          // const model = genAI.getGenerativeModel({ model: "embedding-001"});
           const modelName = "text-embedding-004"; // 768 dimensions
           const taskType = TaskType.SEMANTIC_SIMILARITY;
-          console.log("Checked TOken Length");
+          // console.log("Checked TOken Length");
 
-          // Create a new instance of GoogleGenerativeAIEmbeddings
           const embeddings = new GoogleGenerativeAIEmbeddings({
             modelName: modelName,
             taskType: taskType,
@@ -100,15 +75,13 @@ export async function POST(req: NextRequest) {
           const embeddingsArrays = await embeddings.embedDocuments(
             chunks.map((chunk) => chunk.pageContent.replace(/\n/g, " "))
           );
-          console.log("GOOGLE EMBEDDING", embeddingsArrays);
+          // console.log("GOOGLE EMBEDDING", embeddingsArrays);
           const batchSize = 100;
           let batch: any = [];
           for (let idx = 0; idx < chunks.length; idx++) {
             const chunk = chunks[idx];
-            // const { totalTokens } = await model.countTokens(chunk.pageContent);
-            // console.log("Total Tokens", totalTokens);
             const vector = {
-              id: `${txtPath}_${idx}`,
+              id: `${file.id}_${txtPath}_${idx}`,
               values: embeddingsArrays[idx],
               metadata: {
                 ...chunk.metadata,
@@ -121,7 +94,7 @@ export async function POST(req: NextRequest) {
             // When batch is full or it's the last item, upsert the vectors
             if (batch.length === batchSize || idx === chunks.length - 1) {
               for (const vector of batch) {
-                await index.upsert({
+                const result = await index.upsert({
                   id: vector.id,
                   vector: vector.values,
                   metadata: {
@@ -131,6 +104,7 @@ export async function POST(req: NextRequest) {
                     fileId: file.id,
                   },
                 });
+                console.log("result vector upsert", result);
               }
               batch = [];
             }

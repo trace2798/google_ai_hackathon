@@ -1,5 +1,5 @@
 "use client";
-import { deleteFile } from "@/actions/deleteFile";
+import { softDeleteFile } from "@/actions/file";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ const DeleteFile: FC<DeleteFileProps> = ({ profileId, fileId }) => {
   const handleClick = async () => {
     try {
       setDeleting(true);
-      const res = await deleteFile(profileId, fileId);
+      const res = await softDeleteFile(profileId, fileId);
       console.log(res);
       setDeleting(false);
       if (res === "Done") {

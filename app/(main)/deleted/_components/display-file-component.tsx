@@ -48,8 +48,9 @@ const DisplayFileComponent: FC<DisplayFileComponentProps> = ({
       }
       if (response === "Done") {
         toast.success("File Restored");
+        router.refresh();
       }
-      router.refresh();
+    
     } catch (error) {
       toast.error("Error Restoring File");
     }

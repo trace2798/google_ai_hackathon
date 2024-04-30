@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 import { Thread } from "@prisma/client";
 import { toast } from "sonner";
-import { restoreThread } from "@/actions/restoreThread";
+import { permanentlyDeleteThreadAction, restoreThread } from "@/actions/thread";
+import { useRouter } from "next/navigation";
 
 interface DisplayThreadComponentProps {
   thread?: Thread;
@@ -30,6 +31,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
     return "No thread found";
   }
   const handleRestoreThread = async () => {
+    const router = useRouter();
     try {
       const response = await restoreThread(profileId, thread.id);
       console.log(response);
@@ -38,11 +40,35 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
           "File associated with this thread needs to be restored first"
         );
       }
-      if(response === "Unauthorized"){
+      if (response === "Unauthorized") {
         toast.error("Unauthorized");
       }
       if (response === "Done") {
         toast.success("Thread Restored");
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error("Error Restoring Thread");
+    }
+  };
+
+  const permanentlyDeleteThread = async () => {
+    const router = useRouter();
+    try {
+      const response = await permanentlyDeleteThreadAction(
+        profileId,
+        thread.id
+      );
+      console.log(response);
+      if (response === "Unauthorized") {
+        toast.error("Unauthorized");
+      }
+      if (response === "File not found") {
+        toast.error("File not found");
+      }
+      if (response === "Done") {
+        toast.success("Thread Restored");
+        router.refresh();
       }
     } catch (error) {
       toast.error("Error Restoring Thread");
@@ -52,7 +78,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
     <>
       <div
         key={thread.id}
-        className="space-y-3 border p-3 flex justify-between"
+        className="items-center border p-3 flex justify-between"
       >
         <div>{thread.title}</div>
         <div>
@@ -67,9 +93,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
                 <ArchiveRestore className="w-4 h-4 mr-2" />
                 Restore Thread
               </DropdownMenuItem>
-              <DropdownMenuItem
-              // onClick={onDelete}
-              >
+              <DropdownMenuItem onClick={permanentlyDeleteThread}>
                 <Trash className="w-4 h-4 mr-2" />
                 Delete
               </DropdownMenuItem>
@@ -77,9 +101,6 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
           </DropdownMenu>
         </div>
       </div>
-      {/* {currentUserProfileId === thread.profileId && (
-      
-      )} */}
     </>
   );
 };
