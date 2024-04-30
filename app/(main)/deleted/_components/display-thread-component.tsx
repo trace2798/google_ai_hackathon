@@ -17,6 +17,10 @@ import { Thread } from "@prisma/client";
 import { toast } from "sonner";
 import { permanentlyDeleteThreadAction, restoreThread } from "@/actions/thread";
 import { useRouter } from "next/navigation";
+import {
+  permanentlyDeleteWikiThreadAction,
+  restoreWikiThread,
+} from "../../wiki/action/wikiThread";
 
 interface DisplayThreadComponentProps {
   thread?: Thread;
@@ -52,8 +56,24 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
     }
   };
 
+  const handleRestoreWikiThread = async () => {
+    try {
+      const response = await restoreWikiThread(profileId, thread.id);
+      console.log(response);
+      if (response === "Unauthorized") {
+        toast.error("Unauthorized");
+      }
+      if (response === "Done") {
+        toast.success("Thread Restored");
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error("Error Restoring Thread");
+    }
+  };
+
   const permanentlyDeleteThread = async () => {
-    const router = useRouter();
+   
     try {
       const response = await permanentlyDeleteThreadAction(
         profileId,
@@ -74,6 +94,25 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
       toast.error("Error Restoring Thread");
     }
   };
+
+  const permanentlyDeleteWikiThread = async () => {
+    try {
+      const response = await permanentlyDeleteWikiThreadAction(
+        profileId,
+        thread.id
+      );
+      console.log(response);
+      if (response === "Unauthorized") {
+        toast.error("Unauthorized");
+      }
+      if (response === "Done") {
+        toast.success("Thread Permanently Deleted");
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error("Error Permanently Deleting Thread");
+    }
+  };
   return (
     <>
       <div
@@ -89,14 +128,49 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleRestoreThread}  className="text-green-500 hover:cursor-pointer">
+              {thread.threadType === "WIKI" && (
+                <DropdownMenuItem
+                  onClick={handleRestoreWikiThread}
+                  className="text-green-500 hover:cursor-pointer"
+                >
+                  <ArchiveRestore className="w-4 h-4 mr-2" />
+                  Restore Wiki Thread
+                </DropdownMenuItem>
+              )}
+              {thread.threadType === "DOC" && (
+                <DropdownMenuItem
+                  onClick={handleRestoreThread}
+                  className="text-green-500 hover:cursor-pointer"
+                >
+                  <ArchiveRestore className="w-4 h-4 mr-2" />
+                  Restore Document Thread
+                </DropdownMenuItem>
+              )}
+              {/* <DropdownMenuItem
+                onClick={handleRestoreThread}
+                className="text-green-500 hover:cursor-pointer"
+              >
                 <ArchiveRestore className="w-4 h-4 mr-2" />
                 Restore Thread
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={permanentlyDeleteThread}  className="text-red-500 hover:cursor-pointer">
-                <Trash className="w-4 h-4 mr-2" />
-                Delete
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
+              {thread.threadType === "WIKI" && (
+                <DropdownMenuItem
+                  onClick={permanentlyDeleteWikiThread}
+                  className="text-red-500 hover:cursor-pointer"
+                >
+                  <Trash className="w-4 h-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+              )}
+              {thread.threadType === "DOC" && (
+                <DropdownMenuItem
+                  onClick={permanentlyDeleteThread}
+                  className="text-red-500 hover:cursor-pointer"
+                >
+                  <Trash className="w-4 h-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
