@@ -43,6 +43,7 @@ export const Chat = ({}) => {
     // onFinish: router.refresh,
   });
   const { theme } = useTheme();
+
   const scrollRef = useRef<ElementRef<"div">>(null);
   useEffect(() => {
     scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -60,49 +61,6 @@ export const Chat = ({}) => {
 
   return (
     <div className="flex flex-col w-full max-w-xl pb-24 mx-auto stretch min-h-screen">
-      {/* {pastMessages.length > 0 ? (
-        <>
-          {pastMessages.map((message: any, index: any) => (
-            <div key={index}>
-              {message.isUserMessage ? (
-                <UserMessage text={message.text} />
-              ) : (
-                <AIMessage text={message.text} />
-              )}
-            </div>
-          ))}
-          {messages.map((m) => (
-            <div
-              key={m.id}
-              className={cn("whitespace-pre-wrap group", {
-                "text-blue-500 text-right p-4  gap-x-8 rounded-lg max-w-lg ":
-                  m.role === "user",
-                "text-green-500 p-4 w-full flex items-start gap-x-8 rounded-lg max-w-lg bg-muted":
-                  m.role !== "user",
-              })}
-            >
-              {m.role === "user" ? (
-                ""
-              ) : (
-                <Button
-                //   onClick={() => onCopy(m.content)}
-                  className="hidden group-hover:block"
-                  size="icon"
-                  variant="ghost"
-                >
-                  <Copy className="w-4 h-4" />
-                </Button>
-              )}
-              {m.content}
-            </div>
-          ))}
-        </>
-      ) : (
-        <>
-         
-          <h1>Empty</h1>
-        </>
-      )} */}
       {messages.map((m) => (
         <div
           key={m.id}

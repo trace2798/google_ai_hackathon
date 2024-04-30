@@ -36,20 +36,8 @@ const ThreadIdPage = async ({ params }: ThreadIdPageProps) => {
   if(!currentUser) {
     return redirectToSignIn();
   }
-  // console.log("THREAD PAGE CALL", thread);
-  //   const initialChannel = server?.channels[0];
-
-  //   if (initialChannel?.name !== "general") {
-  //     return null;
-  //   }
-  //   console.log(Threads.length);
   return (
     <>
-      {/* <h1>{Threads?.name}</h1>
-      <h1>{Threads?.description}</h1>
-      <h1>{Threads?.instructions}</h1> */}
-      {/* <CreateThreadButton ThreadId={params.ThreadId} /> */}
-      {/* <h1>{params.threadId}</h1> */}
       {thread && <ChatClient currentUserProfileId={currentUser?.id} thread={thread} />}
     </>
   );

@@ -9,12 +9,14 @@ interface ChatMessagesProps {
   isLoading: boolean;
   // companion: Companion
   thread: Thread;
+  completion: string;
 }
 
 export const ChatMessages = ({
   messages = [],
   isLoading,
   thread,
+  completion,
 }: ChatMessagesProps) => {
   const scrollRef = useRef<ElementRef<"div">>(null);
 
@@ -52,9 +54,8 @@ export const ChatMessages = ({
       ))}
       {isLoading && (
         <ChatMessage
-          //   src={companion.src}
           role="system"
-          isLoading
+          content={completion || "Generating your response..."}
         />
       )}
       <div ref={scrollRef} />

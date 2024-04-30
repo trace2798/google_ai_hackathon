@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { GoogleGenerativeAIStream, StreamingTextResponse } from "ai";
-import cheerio from "cheerio";
+// import cheerio from "cheerio";
 import { CheerioWebBaseLoader } from "langchain/document_loaders/web/cheerio";
 import { NextResponse } from "next/server";
 import { WikipediaQueryRun } from "@langchain/community/tools/wikipedia_query_run";

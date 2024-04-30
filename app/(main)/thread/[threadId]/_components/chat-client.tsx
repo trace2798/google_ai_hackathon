@@ -28,7 +28,7 @@ export const ChatClient = ({
   const router = useRouter();
   const [messages, setMessages] = useState<ChatMessageProps[]>(thread.messages);
 
-  const { input, isLoading, handleInputChange, handleSubmit, setInput } =
+  const { input, isLoading, handleInputChange, handleSubmit, setInput, completion } =
     useCompletion({
       api: `/api/thread/${thread.id}`,
       onFinish(_prompt, completion) {
@@ -41,7 +41,8 @@ export const ChatClient = ({
         // router.refresh();
       },
     });
-  console.log("INPT", input);
+  // console.log("INPT", input);
+  console.log("COMPLETION", completion);
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     const userMessage: ChatMessageProps = {
       role: "user",
@@ -60,6 +61,7 @@ export const ChatClient = ({
         thread={thread}
         isLoading={isLoading}
         messages={messages}
+        completion={completion}
       />
       <ChatForm
         isLoading={isLoading}

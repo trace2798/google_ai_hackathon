@@ -100,63 +100,95 @@ export async function POST(
     for (let i = 0; i < content.length; i++) {
       concentratedContent += content[i]?.metadata?.pageContent + " ";
     }
-    console.log("Content", concentratedContent);
+    console.log("Content Length", concentratedContent.length);
+
     // const chat = genAI.getGenerativeModel({ model: "gemini-1.0-pro" })
     //systemInstruction is only working with gemini-1.5-pro-latest not with gemini-pro. Error: GoogleGenerativeAIError: [400 Bad Request] Developer instruction is not enabled for models/gemini-1.0-pro
+    // const response = await genAI
+    //   .getGenerativeModel({
+    //     model: "gemini-1.0-pro",
+    //     // systemInstruction: {
+    //     //   role: "system",
+    //     //   parts: [
+    //     //     {
+    //     //       text: prompt,
+    //     //     },
+    //     //   ],
+    //     // },
+    //   })
+    //   .startChat({
+    //     history: [
+    //       {
+    //         role: "user",
+    //         parts: [{ text: "Hello, I need some help." }],
+    //       },
+    //       {
+    //         role: "model",
+    //         parts: [{ text: `${prompt}` }],
+    //       },
+    //     ],
+    //     generationConfig: {
+    //       maxOutputTokens: 100,
+    //     },
+    //   })
+    //   .sendMessageStream(
+    //     `${prompt}. Now answer: ${question} referencing this content: ${concentratedContent}.`
+    //   );
+    // // .generateContentStream({
+    // //   contents: [
+    // //     {
+    // //       role: "user",
+    // //       parts: [
+    // //         {
+    // //           text: `${prompt}. Now answer: ${question} referencing this content: ${concentratedContent}.`,
+    // //         },
+    // //       ],
+    // //     },
+    // //   ],
+    // // });
+    // // const send = `${prompt}. Now answer: ${question} referencing this content: ${concentratedContent}.`
+    // // const response = await genAI
+    // //   .getGenerativeModel({ model: "gemini-pro" })
+    // //   .generateContentStream(buildGoogleGenAIPrompt(question));
+
+    //Providing the best answers this way but the system instruction is only working with gemini-1.5-pro-latest
     const response = await genAI
       .getGenerativeModel({
-        model: "gemini-1.0-pro",
-        // systemInstruction: {
-        //   role: "system",
-        //   parts: [
-        //     {
-        //       text: prompt,
-        //     },
-        //   ],
-        // },
-      })
-      .startChat({
-        history: [
-          {
-            role: "user",
-            parts: [{ text: "Hello, I need some help." }],
-          },
-          {
-            role: "model",
-            parts: [{ text: `${prompt}` }],
-          },
-        ],
-        generationConfig: {
-          maxOutputTokens: 100,
+        model: "gemini-1.5-pro-latest",
+        systemInstruction: {
+          role: "system",
+          parts: [
+            {
+              text: prompt,
+            },
+          ],
         },
       })
-      .sendMessageStream(
-        `${prompt}. Now answer: ${question} referencing this content: ${concentratedContent}.`
-      );
-    // .generateContentStream({
-    //   contents: [
-    //     {
-    //       role: "user",
-    //       parts: [
-    //         {
-    //           text: `${prompt}. Now answer: ${question} referencing this content: ${concentratedContent}.`,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // });
+      .generateContentStream({
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `Answer what the user ask, user input: ${question} referencing this content: ${concentratedContent}.`,
+              },
+            ],
+          },
+        ],
+      });
     // const send = `${prompt}. Now answer: ${question} referencing this content: ${concentratedContent}.`
     // const response = await genAI
     //   .getGenerativeModel({ model: "gemini-pro" })
     //   .generateContentStream(buildGoogleGenAIPrompt(question));
-
     const stream = GoogleGenerativeAIStream(response, {
-      onStart: async () => {
+      // onStart: async () => {
         // This callback is called when the stream starts
         // You can use this to save the prompt to your database
-        console.log(prompt);
-        console.log(body);
-      },
+        // console.log(prompt);
+        // console.log(body);
+        // console.log(question);
+        // console.log(concentratedContent);
+      // },
       onToken: async (token: string) => {
         console.log(token);
       },
