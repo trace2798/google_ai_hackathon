@@ -4,6 +4,8 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { ChatClient } from "./_components/chat-client";
 
+
+
 interface ThreadIdPageProps {
   params: {
     threadId: string;
