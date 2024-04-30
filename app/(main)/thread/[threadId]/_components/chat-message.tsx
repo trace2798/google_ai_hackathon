@@ -17,6 +17,7 @@ export interface ChatMessageProps {
   content?: string;
   isLoading?: boolean;
   src?: string;
+  createdAt?: Date;
 }
 
 export const ChatMessage = ({

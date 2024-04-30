@@ -27,7 +27,7 @@ const ThreadIdPage = async ({ params }: ThreadIdPageProps) => {
           profileId: profile.id,
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
       },
     },

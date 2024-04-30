@@ -50,7 +50,6 @@ const DisplayFileComponent: FC<DisplayFileComponentProps> = ({
         toast.success("File Restored");
         router.refresh();
       }
-    
     } catch (error) {
       toast.error("Error Restoring File");
     }
@@ -96,7 +95,7 @@ const DisplayFileComponent: FC<DisplayFileComponentProps> = ({
     <>
       <div
         key={file.id}
-        className="space-y-3 border p-3 flex justify-between align-middle"
+        className="items-center border p-3 flex justify-between"
       >
         <div>{file.name}</div>
         <div>
@@ -107,16 +106,23 @@ const DisplayFileComponent: FC<DisplayFileComponentProps> = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleFileRestore}>
+              <DropdownMenuItem
+                onClick={handleFileRestore}
+                className="hover:text-green-500 hover:cursor-pointer"
+              >
                 <ArchiveRestore className="w-4 h-4 mr-2" />
                 Restore File
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleFileAndThreadRestore}>
+              <DropdownMenuItem
+                onClick={handleFileAndThreadRestore}
+                className="hover:text-green-500 hover:cursor-pointer"
+              >
                 <ArchiveRestore className="w-4 h-4 mr-2" />
                 Restore File and Threads
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handlePermanentlyDeleteFileAndThreadRestore}
+                className="hover:text-red-500 hover:cursor-pointer"
               >
                 <Trash className="w-4 h-4 mr-2" />
                 Delete

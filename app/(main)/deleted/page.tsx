@@ -27,11 +27,12 @@ const Page: FC<PageProps> = async ({}) => {
         title="Soft Deleted Activities"
         description="Here you have the option to restore or permanently delete any thread and file."
       />
-      <div className="w-full h-[50vh] flex justify-center items-center">
-        {softDeletedThreads.length === 0 && softDeletedFiles.length === 0 ? (
+
+      {softDeletedThreads.length === 0 && softDeletedFiles.length === 0 ? (
+        <div className="w-full h-[50vh] flex justify-center items-center">
           <Heading title="Nothing to permanently delete or restore" />
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-1 mt-5">
         {softDeletedThreads.length > 0 && <Heading title="Threads" />}

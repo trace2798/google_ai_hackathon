@@ -40,14 +40,12 @@ export const ChatMessages = ({
     <div className="flex-1 overflow-y-auto pr-4">
       <ChatMessage
         isLoading={fakeLoading}
-        // src={companion.src}
         role="system"
         content={`Hello, I am an AI bot and I am here to help you with this document`}
       />
       {messages.map((message, index) => (
         <ChatMessage
           key={index}
-          //   src={companion.src}
           content={message.content}
           role={message.role}
         />

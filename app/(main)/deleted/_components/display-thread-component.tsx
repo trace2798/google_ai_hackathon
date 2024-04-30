@@ -30,8 +30,8 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
   if (!thread) {
     return "No thread found";
   }
+  const router = useRouter();
   const handleRestoreThread = async () => {
-    const router = useRouter();
     try {
       const response = await restoreThread(profileId, thread.id);
       console.log(response);
@@ -89,11 +89,11 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleRestoreThread}>
+              <DropdownMenuItem onClick={handleRestoreThread}  className="hover:text-green-500 hover:cursor-pointer">
                 <ArchiveRestore className="w-4 h-4 mr-2" />
                 Restore Thread
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={permanentlyDeleteThread}>
+              <DropdownMenuItem onClick={permanentlyDeleteThread}  className="hover:text-red-500 hover:cursor-pointer">
                 <Trash className="w-4 h-4 mr-2" />
                 Delete
               </DropdownMenuItem>

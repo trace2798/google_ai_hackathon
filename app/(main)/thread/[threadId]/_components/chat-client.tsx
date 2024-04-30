@@ -36,10 +36,8 @@ export const ChatClient = ({
           role: "system",
           content: completion,
         };
-
         setMessages((current) => [...current, systemMessage]);
         setInput("");
-
         // router.refresh();
       },
     });
@@ -59,7 +57,6 @@ export const ChatClient = ({
     <div className="flex flex-col h-full p-4 space-y-2">
       <ChatHeader currentUserProfileId={currentUserProfileId} thread={thread} />
       <ChatMessages
-        // companion={thread.companion}
         thread={thread}
         isLoading={isLoading}
         messages={messages}

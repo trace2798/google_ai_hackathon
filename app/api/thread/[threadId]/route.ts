@@ -1,3 +1,4 @@
+import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { GoogleGenerativeAI, TaskType } from "@google/generative-ai";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
@@ -26,6 +27,7 @@ export async function POST(
   { params }: { params: { threadId: string } }
 ) {
   try {
+    const profile = await currentProfile();
     const body = await request.json();
     console.log("messages", body);
     const question = body.prompt;
@@ -39,6 +41,15 @@ export async function POST(
     if (!thread) {
       return new NextResponse("Not Found", { status: 404 });
     }
+    await db.message.create({
+      data: {
+        content: question,
+        role: "user",
+        threadId: thread.id,
+        profileId: profile?.id as string,
+        fileId: thread.fileId as string,
+      },
+    });
     const prompt =
       thread.prompt ||
       `You are an helpful AI assistant who is responsible to answer users question. 
@@ -55,7 +66,7 @@ export async function POST(
       taskType: taskType,
     });
     const embeddingedQuestion = await embeddings.embedQuery(question);
-   
+
     const content = await index.query({
       vector: embeddingedQuestion as number[],
       includeVectors: false,
@@ -92,7 +103,35 @@ export async function POST(
     console.log(response);
     console.log("2");
     // Convert the response into a friendly text-stream
-    const stream = GoogleGenerativeAIStream(response);
+    const stream = GoogleGenerativeAIStream(response, {
+      // async onFinal(response: any) {
+      //   const answer = await response.response.text()
+      //   console.log("answer", answer);
+      // await db.message.create({
+      //   data: {
+      //     content: response.response.text(),
+      //     role: "system",
+      //     threadId: thread.id,
+      //     profileId: profile?.id as string,
+      //     fileId: thread.fileId as string,
+      //   },
+      // });
+      // },
+      onCompletion: async (completion: string) => {
+        // This callback is called when the completion is ready
+        // You can use this to save the final completion to your database
+        await db.message.create({
+          data: {
+            content: completion,
+            role: "system",
+            threadId: thread.id,
+            profileId: profile?.id as string,
+            fileId: thread.fileId as string,
+          },
+        });
+      },
+    });
+    // console.log("response", response)
     console.log("stream", stream);
     // Respond with the stream
     console.log(new StreamingTextResponse(stream));
