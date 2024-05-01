@@ -47,7 +47,7 @@ const WebThreadList: FC<WebThreadListProps> = ({ thread, profileId }) => {
           <Link
             key={thread.id}
             prefetch={false}
-            href={`/thread/${thread.id}`}
+            href={`/web-search/${thread.id}`}
             className="hover:text-indigo-500"
           >
             <div key={thread.id} className="">

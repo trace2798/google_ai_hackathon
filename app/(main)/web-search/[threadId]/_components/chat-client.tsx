@@ -23,21 +23,27 @@ export const ChatClient = ({
   const router = useRouter();
   const [messages, setMessages] = useState<ChatMessageProps[]>(thread.messages);
 
-  const { input, isLoading, handleInputChange, handleSubmit, setInput, completion } =
-    useCompletion({
-      api: `/api/realtime/${thread.id}`,
-      onFinish(_prompt, completion) {
-        const systemMessage: ChatMessageProps = {
-          role: "system",
-          content: completion,
-        };
-        setMessages((current) => [...current, systemMessage]);
-        setInput("");
-        // router.refresh();
-      },
-    });
-  // console.log("INPT", input);
-  console.log("COMPLETION", completion);
+  const {
+    input,
+    isLoading,
+    handleInputChange,
+    handleSubmit,
+    setInput,
+    completion, 
+    complete,
+    data,
+  } = useCompletion({
+    api: `/api/realtime/${thread.id}`,
+    onFinish(_prompt, completion) {
+      const systemMessage: ChatMessageProps = {
+        role: "system",
+        content: completion,
+      };
+      setMessages((current) => [...current, systemMessage]);
+      setInput("");
+    },
+  });
+
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     const userMessage: ChatMessageProps = {
       role: "user",

@@ -31,11 +31,14 @@ const ThreadIdPage = async ({ params }: ThreadIdPageProps) => {
       },
     },
   });
-  const currentUser = await currentProfile();
-  if (!currentUser) {
-    return redirectToSignIn();
-  }
-  return <>{thread && <ChatClient currentUserProfileId={currentUser?.id} thread={thread} />}</>;
+
+  return (
+    <>
+      {thread && (
+        <ChatClient currentUserProfileId={profile.id} thread={thread} />
+      )}
+    </>
+  );
 };
 
 export default ThreadIdPage;
