@@ -150,6 +150,9 @@ export async function POST(req: NextRequest) {
         });
       } catch (error) {
         console.log("Error embedding pdf document", error);
+        return new NextResponse("Error", {
+          status: 500,
+        });
       }
     } catch (error) {
       console.log("Error parsing pdf document");
@@ -159,8 +162,14 @@ export async function POST(req: NextRequest) {
       const loader = new TextLoader(document as Blob);
       const docs = await loader.load();
       console.log("DOCS text", docs);
+      return new NextResponse(JSON.stringify(docs), {
+        status: 200,
+      });
     } catch (error) {
       console.log("Error parsing text document", error);
+      return new NextResponse("Error", {
+        status: 500,
+      });
     }
   }
 }
