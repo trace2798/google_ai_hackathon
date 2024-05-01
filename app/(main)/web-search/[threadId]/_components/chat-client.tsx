@@ -33,6 +33,7 @@ export const ChatClient = ({
     complete,
     data,
   } = useCompletion({
+    // api: `/api/realtime`,
     api: `/api/realtime/${thread.id}`,
     onFinish(_prompt, completion) {
       const systemMessage: ChatMessageProps = {
