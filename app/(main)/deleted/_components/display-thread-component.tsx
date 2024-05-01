@@ -21,7 +21,10 @@ import {
   permanentlyDeleteWikiThreadAction,
   restoreWikiThread,
 } from "../../wiki/action/wikiThread";
-import { permanentlyDeleteWebThreadAction, restoreWebThread } from "../../web-search/actions/webThread";
+import {
+  permanentlyDeleteWebThreadAction,
+  restoreWebThread,
+} from "../../web-search/actions/webThread";
 
 interface DisplayThreadComponentProps {
   thread?: Thread;
@@ -32,10 +35,11 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
   thread,
   profileId,
 }) => {
+  const router = useRouter();
   if (!thread) {
     return "No thread found";
   }
-  const router = useRouter();
+
   const handleRestoreThread = async () => {
     try {
       const response = await restoreThread(profileId, thread.id);
@@ -90,7 +94,6 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
   };
 
   const permanentlyDeleteThread = async () => {
-   
     try {
       const response = await permanentlyDeleteThreadAction(
         profileId,
@@ -200,7 +203,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
                   Delete
                 </DropdownMenuItem>
               )}
-               {thread.threadType === "WEB" && (
+              {thread.threadType === "WEB" && (
                 <DropdownMenuItem
                   onClick={permanentlyDeleteWebThread}
                   className="text-red-500 hover:cursor-pointer"

@@ -46,7 +46,7 @@ const HomeSearch: FC<HomeSearchProps> = ({}) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log("prompt:",values.searchInput);
-    handleSubmit(e);
+    // handleSubmit(e);
   }
   return (
     <>

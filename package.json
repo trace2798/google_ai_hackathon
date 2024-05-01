@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.10",
+    "@hookform/resolvers": "^3.3.4",
     "@langchain/community": "^0.0.53",
     "@langchain/core": "^0.1.61",
     "@langchain/google-genai": "^0.0.12",
@@ -36,12 +37,13 @@
     "pdf-parse": "^1.1.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.51.3",
     "react-markdown": "^9.0.1",
     "react-spinners": "^0.13.8",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.4"
+    "zod": "^3.23.5"
   },
   "devDependencies": {
     "@types/node": "^20",
