@@ -14,7 +14,7 @@ const CreateWebThread: FC<CreateWebThreadProps> = ({ profileId }) => {
   const router = useRouter();
   const handleThreadCreate = async () => {
     const data = await createWebThread(profileId);
-    router.push(`/web/${data}`);
+    router.push(`/web-search/${data}`);
   };
   return (
     <>

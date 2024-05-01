@@ -25,7 +25,7 @@ export const ChatClient = ({
 
   const { input, isLoading, handleInputChange, handleSubmit, setInput, completion } =
     useCompletion({
-      api: `/api/wiki/${thread.id}`,
+      api: `/api/realtime/${thread.id}`,
       onFinish(_prompt, completion) {
         const systemMessage: ChatMessageProps = {
           role: "system",
