@@ -21,6 +21,7 @@ import {
   permanentlyDeleteWikiThreadAction,
   restoreWikiThread,
 } from "../../wiki/action/wikiThread";
+import { permanentlyDeleteWebThreadAction, restoreWebThread } from "../../web-search/actions/webThread";
 
 interface DisplayThreadComponentProps {
   thread?: Thread;
@@ -59,6 +60,22 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
   const handleRestoreWikiThread = async () => {
     try {
       const response = await restoreWikiThread(profileId, thread.id);
+      console.log(response);
+      if (response === "Unauthorized") {
+        toast.error("Unauthorized");
+      }
+      if (response === "Done") {
+        toast.success("Thread Restored");
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error("Error Restoring Thread");
+    }
+  };
+
+  const handleRestoreWebThread = async () => {
+    try {
+      const response = await restoreWebThread(profileId, thread.id);
       console.log(response);
       if (response === "Unauthorized") {
         toast.error("Unauthorized");
@@ -113,6 +130,25 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
       toast.error("Error Permanently Deleting Thread");
     }
   };
+
+  const permanentlyDeleteWebThread = async () => {
+    try {
+      const response = await permanentlyDeleteWebThreadAction(
+        profileId,
+        thread.id
+      );
+      console.log(response);
+      if (response === "Unauthorized") {
+        toast.error("Unauthorized");
+      }
+      if (response === "Done") {
+        toast.success("Thread Permanently Deleted");
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error("Error Permanently Deleting Thread");
+    }
+  };
   return (
     <>
       <div
@@ -137,6 +173,15 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
                   Restore Wiki Thread
                 </DropdownMenuItem>
               )}
+              {thread.threadType === "WEB" && (
+                <DropdownMenuItem
+                  onClick={handleRestoreWebThread}
+                  className="text-green-500 hover:cursor-pointer"
+                >
+                  <ArchiveRestore className="w-4 h-4 mr-2" />
+                  Restore Web Thread
+                </DropdownMenuItem>
+              )}
               {thread.threadType === "DOC" && (
                 <DropdownMenuItem
                   onClick={handleRestoreThread}
@@ -146,16 +191,18 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
                   Restore Document Thread
                 </DropdownMenuItem>
               )}
-              {/* <DropdownMenuItem
-                onClick={handleRestoreThread}
-                className="text-green-500 hover:cursor-pointer"
-              >
-                <ArchiveRestore className="w-4 h-4 mr-2" />
-                Restore Thread
-              </DropdownMenuItem> */}
               {thread.threadType === "WIKI" && (
                 <DropdownMenuItem
                   onClick={permanentlyDeleteWikiThread}
+                  className="text-red-500 hover:cursor-pointer"
+                >
+                  <Trash className="w-4 h-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+              )}
+               {thread.threadType === "WEB" && (
+                <DropdownMenuItem
+                  onClick={permanentlyDeleteWebThread}
                   className="text-red-500 hover:cursor-pointer"
                 >
                   <Trash className="w-4 h-4 mr-2" />
