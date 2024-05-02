@@ -1,16 +1,13 @@
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { NextRequest, NextResponse } from "next/server";
-// import { JsonOutputFunctionsParser } from "langchain/output_parsers";
-// import { DocxLoader } from "langchain/document_loaders/fs/docx";
+import { currentProfile } from "@/lib/current-profile";
+import { db } from "@/lib/db";
+import { TaskType } from "@google/generative-ai";
+import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { Index } from "@upstash/vector";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { currentProfile } from "@/lib/current-profile";
-import { db } from "@/lib/db";
-import { GoogleGenerativeAI, TaskType } from "@google/generative-ai";
-import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: NextRequest) {
   const body = await req.formData();
@@ -37,6 +34,11 @@ export async function POST(req: NextRequest) {
 
       const docs = await pdfLoader.load();
       const pagesAmt = docs.length;
+      if (pagesAmt > 10) {
+        return new NextResponse("Currently supports document upto 10 pages", {
+          status: 500,
+        });
+      }
       const selectedDocuments = docs.filter(
         (doc) => doc.pageContent !== undefined
       );
@@ -104,7 +106,7 @@ export async function POST(req: NextRequest) {
                     fileId: file.id,
                   },
                 });
-                console.log("result vector upsert", result);
+                // console.log("result vector upsert", result);
               }
               batch = [];
             }
@@ -149,13 +151,16 @@ export async function POST(req: NextRequest) {
           status: 200,
         });
       } catch (error) {
-        console.log("Error embedding pdf document", error);
-        return new NextResponse("Error", {
+        // console.log("Error embedding pdf document", error);
+        return new NextResponse("Error Embedding Pdf", {
           status: 500,
         });
       }
     } catch (error) {
-      console.log("Error parsing pdf document");
+      // console.log("Error parsing pdf document");
+      return new NextResponse("Error parsing pdf document", {
+        status: 500,
+      });
     }
   } else if ((document as File).type === "text/plain") {
     try {

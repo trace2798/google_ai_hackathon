@@ -100,7 +100,7 @@ export async function POST(
     for (let i = 0; i < content.length; i++) {
       concentratedContent += content[i]?.metadata?.pageContent + " ";
     }
-    console.log("Content Length", concentratedContent.length);
+    // console.log("Content Length", concentratedContent.length);
 
     // const chat = genAI.getGenerativeModel({ model: "gemini-1.0-pro" })
     //systemInstruction is only working with gemini-1.5-pro-latest not with gemini-pro. Error: GoogleGenerativeAIError: [400 Bad Request] Developer instruction is not enabled for models/gemini-1.0-pro
@@ -170,7 +170,7 @@ export async function POST(
             role: "user",
             parts: [
               {
-                text: `Answer what the user ask, user input: ${question} referencing this content: ${concentratedContent}.`,
+                text: `Answer user input, user input: ${question} referencing this content: ${concentratedContent}.`,
               },
             ],
           },
@@ -181,17 +181,6 @@ export async function POST(
     //   .getGenerativeModel({ model: "gemini-pro" })
     //   .generateContentStream(buildGoogleGenAIPrompt(question));
     const stream = GoogleGenerativeAIStream(response, {
-      // onStart: async () => {
-        // This callback is called when the stream starts
-        // You can use this to save the prompt to your database
-        // console.log(prompt);
-        // console.log(body);
-        // console.log(question);
-        // console.log(concentratedContent);
-      // },
-      onToken: async (token: string) => {
-        console.log(token);
-      },
       onCompletion: async (completion: string) => {
         await db.message.create({
           data: {
@@ -214,7 +203,7 @@ export async function POST(
     });
     return new StreamingTextResponse(stream);
   } catch (error) {
-    console.log("Error Internal:", error);
+    // console.log("Error Internal:", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

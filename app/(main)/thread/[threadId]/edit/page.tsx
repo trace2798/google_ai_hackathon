@@ -1,5 +1,8 @@
 import { db } from "@/lib/db";
 import { FC } from "react";
+import EditPrompt from "./_components/edit-prompt";
+import { Heading } from "@/components/heading";
+import { Separator } from "@/components/ui/separator";
 
 interface PageProps {
   params: {
@@ -15,14 +18,16 @@ const Page: FC<PageProps> = async ({ params }) => {
     },
   });
   console.log(thread);
-  if(!thread) {
-    return null
+  if (!thread) {
+    return null;
   }
   return (
     <>
       <div>
-        <h1>Edit Thread</h1>
-        <p>Current Prompt: {thread.prompt}</p>
+        <Heading title="Edit Thread Prompt" />
+        <Separator className="mb-5" />
+        <p className="mb-5">Current Prompt: {thread.prompt}</p>
+        <EditPrompt thread={thread} />
       </div>
     </>
   );
