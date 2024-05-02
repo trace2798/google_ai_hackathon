@@ -9,7 +9,9 @@ Features:
 - Chat with your document
 - Langchain wiki tool to search wikipedia and then generate response back using LLM
 - Langchain agent integration with gemini AI to browser website and the internet.
-
+- Implementation of server actions.
+- Ability to soft/permanently delete thread and add custom prompt for thread.
+- Restore soft deleted threads and files.
 
 ### Prerequisites
 
@@ -48,10 +50,10 @@ UPSTASH_VECTOR_REST_TOKEN=
 BRAVE_SEARCH_API_KEY=
 ```
 
-
 ### Start the run the development server:
 
 ```shell
 npm run dev
 ```
+
 Open http://localhost:3000 with your browser to see the result.
