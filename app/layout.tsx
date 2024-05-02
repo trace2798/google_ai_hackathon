@@ -13,6 +13,25 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Kenniscentrum",
   description: "Kenniscentrum: Where knowledge begins",
+  metadataBase: new URL("https://googleaihackathon-production.up.railway.app"),
+  openGraph: {
+    title: "Kenniscentrum: Where knowledge begins",
+    description: "A fullstack web application for Google AI Hackathon",
+    url: "https://googleaihackathon-production.up.railway.app",
+    siteName: "googleaihackathon-production.up.railway.app",
+    images: ["https://googleaihackathon-production.up.railway.app/og.png"],
+  },
+  twitter: {
+    title: "Kenniscentrum: Where knowledge begins",
+    card: "summary_large_image",
+    images: ["https://googleaihackathon-production.up.railway.app/og.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: `https://googleaihackathon-production.up.railway.app/site.webmanifest`,
 };
 
 export default function RootLayout({

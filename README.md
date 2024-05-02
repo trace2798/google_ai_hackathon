@@ -12,6 +12,7 @@ Features:
 - Implementation of server actions.
 - Ability to soft/permanently delete thread and add custom prompt for thread.
 - Restore soft deleted threads and files.
+- Custom open source font.
 
 ### Prerequisites
 
