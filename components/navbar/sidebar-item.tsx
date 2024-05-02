@@ -17,7 +17,7 @@ export const SidebarItem = ({ label, href }: Props) => {
   return (
     <Button
       variant={active ? "secondary" : "special"}
-      className="justify-start h-[52px] hover:bg-secondary"
+      className="justify-start h-[52px] hover:bg-secondary font-ranadeRegular"
       asChild
     >
       <Link href={href}>{label}</Link>

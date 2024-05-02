@@ -24,6 +24,7 @@
     "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
+    "@tanstack/react-table": "^8.16.0",
     "@upstash/vector": "^1.0.7",
     "ai": "^3.0.35",
     "axios": "^1.6.8",

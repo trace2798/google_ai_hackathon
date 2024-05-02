@@ -9,6 +9,8 @@ import { db } from "@/lib/db";
 import { FC } from "react";
 import { format, formatRelative, subDays, toDate } from "date-fns";
 import { Heading } from "@/components/heading";
+import { columns } from "./_components/columns";
+import { DataTable } from "./_components/data-table";
 interface PageProps {}
 
 const Page: FC<PageProps> = async ({}) => {
@@ -29,17 +31,22 @@ const Page: FC<PageProps> = async ({}) => {
           description="Your activities will be shown here"
         />
       </div>
-      <div className="grid grid-cols-1 mt-10 space-y-3">
+      {/* <div className="grid grid-cols-1 mt-10 space-y-3">
         {activity.map((a) => (
           <Card key={a.id} className="">
             <CardHeader>
-              <CardTitle>{a.message}</CardTitle>
-              <CardDescription>
-                {format(new Date(a.createdAt), "yyyy-MM-dd")}
+              <CardTitle className="font-satoshiBold text-lg">
+                {a.message}
+              </CardTitle>
+              <CardDescription className="font-satoshiMedium">
+                {format(new Date(a.createdAt), "MM-dd-yyyy HH:mm:ss")}
               </CardDescription>
             </CardHeader>
           </Card>
         ))}
+      </div> */}
+      <div>
+        <DataTable columns={columns} data={activity} />
       </div>
     </>
   );

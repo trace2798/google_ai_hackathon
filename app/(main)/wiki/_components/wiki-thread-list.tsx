@@ -49,7 +49,7 @@ const WikiThreadList: FC<WikiThreadListProps> = ({ thread, profileId }) => {
             href={`/thread/${thread.id}`}
             className="hover:text-indigo-500"
           >
-            <div key={thread.id} className="">
+            <div key={thread.id} className="font-satoshiMedium">
               {thread.title}
             </div>
           </Link>

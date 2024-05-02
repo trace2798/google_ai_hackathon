@@ -30,7 +30,7 @@ export const Sidebar = async ({ className }: Props) => {
     >
       <Link href="/">
         <div className="pt-8 pl-4 pb-7 flex items-center gap-x-3">
-          <h1 className="text-xl font-extrabold tracking-wide">
+          <h1 className="text-xl font-satoshiBold tracking-wide bg-gradient-to-r bg-clip-text text-transparent from-indigo-500  to-indigo-300">
             Kenniscentrum
           </h1>
         </div>
