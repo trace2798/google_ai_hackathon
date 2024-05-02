@@ -20,7 +20,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const buildGoogleGenAIPrompt = (messages: Message[]) => ({
   contents: messages
     .filter(
-      (message) => message.role === "user" || message.role === "assistant"
+      (message) => message.role === "user" || message.role === "system"
     )
     .map((message) => ({
       role: message.role === "user" ? "user" : "model",

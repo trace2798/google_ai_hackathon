@@ -42,7 +42,7 @@ const embeddings = new GoogleGenerativeAIEmbeddings({
 const convertVercelMessageToLangChainMessage = (message: Message) => {
   if (message.role === "user") {
     return new HumanMessage(message.content);
-  } else if (message.role === "assistant") {
+  } else if (message.role === "system") {
     return new AIMessage(message.content);
   } else {
     return new ChatMessage(message.content, message.role);
@@ -105,8 +105,8 @@ export async function POST(
     console.log("Question: ", question);
     const messages = (thread.messages ?? []).filter(
       (message: Message) =>
-        message.role === "user" || message.role === "assistant"
-    );
+        message.role === "user" || message.role === "system"
+    ).slice(-15);
     console.log("messages", messages);
     console.log(messages);
     const previousMessages = messages
