@@ -46,7 +46,7 @@ const WikiThreadList: FC<WikiThreadListProps> = ({ thread, profileId }) => {
           <Link
             key={thread.id}
             prefetch={false}
-            href={`/thread/${thread.id}`}
+            href={`/wiki/${thread.id}`}
             className="hover:text-indigo-500"
           >
             <div key={thread.id} className="font-satoshiMedium">

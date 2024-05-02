@@ -17,7 +17,7 @@ export async function POST(
     const body = await request.json();
     const question = body.prompt;
     // const question = `${body.messages[body.messages.length - 1].content}`;
-    //console.log(question);
+    console.log(question);
     const tool = new WikipediaQueryRun({
       topKResults: 3,
       maxDocContentLength: 12000,
@@ -75,19 +75,32 @@ export async function POST(
         ],
       });
     const key = (await keywords.response).text();
-    //console.log(key);
+    console.log(key);
     const res = await tool.call(key);
-    //console.log(res);
-    const specialInstruction = thread.prompt;
+    console.log(res);
+    const specialInstruction =
+      thread.prompt ||
+      "You are a elite research assistant. Your job is to answer users question based on available information. Provide detailed concise answer.";
     const response = await genAI
-      .getGenerativeModel({ model: "gemini-pro" })
+      .getGenerativeModel({
+        // model: "gemini-pro",
+        model: "gemini-1.5-pro-latest",
+        systemInstruction: {
+          role: "system",
+          parts: [
+            {
+              text: specialInstruction,
+            },
+          ],
+        },
+      })
       .generateContentStream({
         contents: [
           {
             role: "user",
             parts: [
               {
-                text: `${specialInstruction}Explain in detail the users question:${question} based on this content: ${res}. Always provide source/reference links if applicable.`,
+                text: `Explain in detail the users question:${question} based on this content: ${res}. Always provide source/reference links if applicable.`,
               },
             ],
           },
