@@ -122,7 +122,7 @@ const UploadDoc = () => {
               id="document"
               className="relative block w-full h-full z-50 opacity-0 hover:cursor-pointer"
               onChange={handleDocumentUpload}
-              accept=".pdf,.txt,.md"
+              accept=".pdf"
             />
           </Label>
           <p className="text-secondary-foreground my-2">

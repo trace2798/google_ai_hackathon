@@ -8,7 +8,6 @@ import { Index } from "@upstash/vector";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 
-
 export async function POST(req: NextRequest) {
   const body = await req.formData();
   // //console.log("BODY", body);
@@ -58,7 +57,7 @@ export async function POST(req: NextRequest) {
           const txtPath = doc.metadata.loc.pageNumber;
           const text = doc.pageContent.replace(/(\s*\n\s*)+/g, " ");
           const textSplitter = new RecursiveCharacterTextSplitter({
-            chunkSize: 5000, //since the model can take upto 512 token as input
+            chunkSize: 5000, 
             chunkOverlap: 50,
           });
           //Split text into chunks (documents)
@@ -162,19 +161,9 @@ export async function POST(req: NextRequest) {
         status: 500,
       });
     }
-  } else if ((document as File).type === "text/plain") {
-    try {
-      const loader = new TextLoader(document as Blob);
-      const docs = await loader.load();
-      //console.log("DOCS text", docs);
-      return new NextResponse(JSON.stringify(docs), {
-        status: 200,
-      });
-    } catch (error) {
-      //console.log("Error parsing text document", error);
-      return new NextResponse("Error", {
-        status: 500,
-      });
-    }
+  } else {
+    return new NextResponse("Format Error", {
+      status: 500,
+    });
   }
 }

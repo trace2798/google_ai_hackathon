@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Kenniscentrum: Where knowledge begins
 
-## Getting Started
+This is a repository for my submission for Google AI Hackathon hosted on Devpost, which took place from March 18 until May 02, 2024.
 
-First, run the development server:
+Features:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Implementation of Google Gemini API
+- Langchain integration with gemini api
+- Chat with your document
+- Langchain wiki tool to search wikipedia and then generate response back using LLM
+- Langchain agent integration with gemini AI to browser website and the internet.
+
+
+### Prerequisites
+
+**Node version 18.17.x** or higher. I am using v21.7.1 locally.
+**API keys mentioned below and in the .env.example file**
+
+### Cloning the repository
+
+```shell
+git clone https://github.com/trace2798/google_ai_hackathon.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install packages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```shell
+npm i
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Setup .env file
 
-## Learn More
+```js
+# Using Clerk for authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+# For this application I am using a MySql database from aiven.
+DATABASE_URL=
 
-To learn more about Next.js, take a look at the following resources:
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+# Both of them will have the same API key, langchain excepts it in GOOGLE_API_KEY wording.
+GEMINI_API_KEY=
+GOOGLE_API_KEY=
+# using upstash vector as the vector database to store the embedded content of the document
+UPSTASH_VECTOR_REST_URL=
+UPSTASH_VECTOR_REST_TOKEN=
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+BRAVE_SEARCH_API_KEY=
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+### Start the run the development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```shell
+npm run dev
+```
+Open http://localhost:3000 with your browser to see the result.
