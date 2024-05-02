@@ -11,13 +11,13 @@ interface PageProps {
 }
 
 const Page: FC<PageProps> = async ({ params }) => {
-  console.log("Pathname: ", params.threadId);
+  //console.log("Pathname: ", params.threadId);
   const thread = await db.thread.findUnique({
     where: {
       id: params.threadId,
     },
   });
-  console.log(thread);
+  //console.log(thread);
   if (!thread) {
     return null;
   }
@@ -26,6 +26,8 @@ const Page: FC<PageProps> = async ({ params }) => {
       <div>
         <Heading title="Edit Thread Prompt" />
         <Separator className="mb-5" />
+        <p>Thread Name: {thread.title}</p>
+        <p>Thread Type: {thread.threadType}</p>
         <p className="mb-5">Current Prompt: {thread.prompt}</p>
         <EditPrompt thread={thread} />
       </div>

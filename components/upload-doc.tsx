@@ -37,7 +37,7 @@ const UploadDoc = () => {
       setError("Please upload the document first");
       return;
     }
-    console.log("DOCUMENT FE", document);
+    //console.log("DOCUMENT FE", document);
     setIsLoading(true);
     const interval = startSimulatedProgress();
 
@@ -50,13 +50,13 @@ const UploadDoc = () => {
       });
       if (res.status === 200) {
         const data = await res.json();
-        console.log("DATA", data);
+        //console.log("DATA", data);
         const threadId = data.id;
         toast.success("Document embedded successfully");
         router.push(`/thread/${threadId}`);
       }
     } catch (e) {
-      console.log("error while generating", e);
+      //console.log("error while generating", e);
     }
     clearInterval(interval);
     setIsLoading(false);

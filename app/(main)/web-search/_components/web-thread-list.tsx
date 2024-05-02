@@ -26,7 +26,7 @@ const WebThreadList: FC<WebThreadListProps> = ({ thread, profileId }) => {
     try {
       setDeleting(true);
       const res = await softDeleteWebThread(profileId, thread.id);
-      console.log(res);
+      //console.log(res);
       setDeleting(false);
       if (res === "Done") {
         toast.success("Thread soft deleted successfully");
@@ -36,7 +36,7 @@ const WebThreadList: FC<WebThreadListProps> = ({ thread, profileId }) => {
         toast.error("Unauthorized");
       }
     } catch (error) {
-      console.log("ERROR IN DELETE BUTTON", error);
+      //console.log("ERROR IN DELETE BUTTON", error);
       toast.error("Error Deleting Thread");
     }
   };

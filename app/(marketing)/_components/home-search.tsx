@@ -45,7 +45,7 @@ const HomeSearch: FC<HomeSearchProps> = ({}) => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log("prompt:",values.searchInput);
+    //console.log("prompt:",values.searchInput);
     // handleSubmit(e);
   }
   return (

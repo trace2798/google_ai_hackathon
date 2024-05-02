@@ -50,10 +50,10 @@ const EditPrompt: FC<EditPromptProps> = ({ thread }) => {
 
   const handleUpdateSubmit = async (values: z.infer<typeof formSchema>) => {
     isSubmit(true);
-    console.log(values);
+    //console.log(values);
 
     const data = await updateThreadPrompt(thread.id, values.updatedPrompt);
-    console.log(data);
+    //console.log(data);
     if (data === "Done") {
       toast.success("Prompt for the thread updated successfully");
     }
@@ -70,7 +70,7 @@ const EditPrompt: FC<EditPromptProps> = ({ thread }) => {
           <DialogHeader>
             <DialogTitle>Edit Prompt</DialogTitle>
             <DialogDescription>
-              Change your prompt for the thread here. Click save when you're
+              Change your prompt for the thread here. Click save when you&apos;re
               done.
             </DialogDescription>
           </DialogHeader>

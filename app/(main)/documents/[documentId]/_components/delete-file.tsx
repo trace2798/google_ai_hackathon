@@ -18,7 +18,7 @@ const DeleteFile: FC<DeleteFileProps> = ({ profileId, fileId }) => {
     try {
       setDeleting(true);
       const res = await softDeleteFile(profileId, fileId);
-      console.log(res);
+      //console.log(res);
       setDeleting(false);
       if (res === "Done") {
         toast.success("File deleted successfully");
@@ -29,7 +29,7 @@ const DeleteFile: FC<DeleteFileProps> = ({ profileId, fileId }) => {
         toast.error("Unauthorized");
       }
     } catch (error) {
-      console.log("ERROR IN DELETE BUTTON", error);
+      //console.log("ERROR IN DELETE BUTTON", error);
       toast.error("Error Deleting File");
     }
   };

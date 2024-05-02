@@ -76,9 +76,9 @@ export async function POST(
         ],
       });
     const key = (await keywords.response).text();
-    // console.log(key);
+    // //console.log(key);
     const res = await tool.call(key);
-    // console.log(res);
+    // //console.log(res);
     const specialInstruction =
       thread.prompt ||
       "You are a elite research assistant. Your job is to answer users question based on available information. Provide detailed concise answer.";

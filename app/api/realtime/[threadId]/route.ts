@@ -118,7 +118,7 @@ export async function POST(
         data.close();
       },
       onCompletion: async (completion: string) => {
-        console.log("completion", completion.split("\n"));
+        //console.log("completion", completion.split("\n"));
         await db.message.create({
           data: {
             content: completion,
@@ -147,7 +147,7 @@ export async function POST(
     );
     return new StreamingTextResponse(stream, {}, data);
   } catch (error) {
-    console.log("error", error);
+    //console.log("error", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -222,7 +222,7 @@ export async function POST(
 //   try {
 //     const profile = await currentProfile();
 //     const body = await request.json();
-//     console.log("BODY", body);
+//     //console.log("BODY", body);
 //     // const question = `${body.messages[body.messages.length - 1].content}`;
 //     const question = body.prompt;
 
@@ -230,19 +230,19 @@ export async function POST(
 //       "hwchase17/structured-chat-agent"
 //     );
 
-//     // console.log("messages length", body.messages.length);
+//     // //console.log("messages length", body.messages.length);
 
-//     console.log("Question: ", question);
+//     //console.log("Question: ", question);
 //     // const messages = (thread.messages ?? []).filter(
 //     //   (message: Message) =>
 //     //     message.role === "user" || message.role === "assistant"
 //     // );
-//     // console.log("messages", messages);
-//     // console.log(messages);
+//     // //console.log("messages", messages);
+//     // //console.log(messages);
 //     // const previousMessages = messages
 //     //   .slice(0, -1)
 //     //   .map(convertVercelMessageToLangChainMessage);
-//     // console.log("previousMessages", previousMessages);
+//     // //console.log("previousMessages", previousMessages);
 //     const tools = [
 //       new BraveSearch({ apiKey: process.env.BRAVE_SEARCH_API_KEY }),
 //       new Calculator(),
@@ -253,7 +253,7 @@ export async function POST(
 //       tools,
 //       prompt,
 //     });
-//     console.log("1");
+//     //console.log("1");
 //     const chain = new AgentExecutor({
 //       agent,
 //       tools,
@@ -266,11 +266,11 @@ export async function POST(
 //       //   { callbacks: [handlers] }
 //     );
 //     // const stream = GoogleGenerativeAIStream(result);
-//     console.log("result", result);
+//     //console.log("result", result);
 //     // return new StreamingTextResponse(result.output, {}, data);
 //     return NextResponse.json(result.response.text() , { status: 200 });
 //   } catch (error) {
-//     console.log("error", error);
+//     //console.log("error", error);
 //     return new NextResponse("Internal Error", { status: 500 });
 //   }
 // }

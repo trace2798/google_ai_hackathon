@@ -22,7 +22,7 @@ export async function createFileThread(
         threadType: "DOC",
       },
     });
-    console.log("thread", thread);
+    //console.log("thread", thread);
     await db.thread.update({
       where: {
         id: thread.id,
@@ -39,7 +39,7 @@ export async function createFileThread(
     });
     return thread.id;
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 }
 
@@ -49,8 +49,8 @@ export async function softDeleteThread(
 ) {
   try {
     const profile = await currentProfile();
-    console.log(profile);
-    console.log(threadId);
+    //console.log(profile);
+    //console.log(threadId);
     if (!profile) {
       return "Forbidden No Profile";
     }
@@ -62,7 +62,7 @@ export async function softDeleteThread(
         id: threadId,
       },
     });
-    console.log("thread", thread);
+    //console.log("thread", thread);
     if (!thread) {
       return "Error: Thread not found";
     }
@@ -74,7 +74,7 @@ export async function softDeleteThread(
         toDelete: true,
       },
     });
-    console.log("updateThread", updateThread);
+    //console.log("updateThread", updateThread);
     await db.activity.create({
       data: {
         message: `Thread called ${thread?.title} has been soft deleted`,
@@ -83,7 +83,7 @@ export async function softDeleteThread(
     });
     return "Done";
   } catch (error) {
-    console.log("Error action deleteFile", error);
+    //console.log("Error action deleteFile", error);
   }
 }
 
@@ -93,8 +93,8 @@ export async function restoreThread(
 ) {
   try {
     const profile = await currentProfile();
-    console.log(profile);
-    console.log(profileId);
+    //console.log(profile);
+    //console.log(profileId);
     if (!profile) {
       return "Forbidden No Profile";
     }
@@ -135,7 +135,7 @@ export async function restoreThread(
 
     return "Done";
   } catch (error) {
-    console.log("Error action deleteFile", error);
+    //console.log("Error action deleteFile", error);
   }
 }
 
@@ -145,8 +145,8 @@ export async function permanentlyDeleteThreadAction(
 ) {
   try {
     const profile = await currentProfile();
-    console.log(profile);
-    console.log(profileId);
+    //console.log(profile);
+    //console.log(profileId);
     if (!profile) {
       return "Forbidden No Profile";
     }
@@ -184,6 +184,6 @@ export async function permanentlyDeleteThreadAction(
 
     return "Done";
   } catch (error) {
-    console.log("Error action deleteFile", error);
+    //console.log("Error action deleteFile", error);
   }
 }

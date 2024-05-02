@@ -11,11 +11,11 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 
 export async function POST(req: NextRequest) {
   const body = await req.formData();
-  // console.log("BODY", body);
+  // //console.log("BODY", body);
   const document = body.get("uploadedFile");
-  // console.log("DOCUMENT", document);
+  // //console.log("DOCUMENT", document);
   const profile = await currentProfile();
-  // console.log("PROFILE", profile);
+  // //console.log("PROFILE", profile);
   if (!profile) {
     return new NextResponse(JSON.stringify({ message: "Profile not found" }), {
       status: 401,
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
 
           const modelName = "text-embedding-004"; // 768 dimensions
           const taskType = TaskType.SEMANTIC_SIMILARITY;
-          // console.log("Checked TOken Length");
+          // //console.log("Checked TOken Length");
 
           const embeddings = new GoogleGenerativeAIEmbeddings({
             modelName: modelName,
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
           const embeddingsArrays = await embeddings.embedDocuments(
             chunks.map((chunk) => chunk.pageContent.replace(/\n/g, " "))
           );
-          // console.log("GOOGLE EMBEDDING", embeddingsArrays);
+          // //console.log("GOOGLE EMBEDDING", embeddingsArrays);
           const batchSize = 100;
           let batch: any = [];
           for (let idx = 0; idx < chunks.length; idx++) {
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
                     fileId: file.id,
                   },
                 });
-                // console.log("result vector upsert", result);
+                // //console.log("result vector upsert", result);
               }
               batch = [];
             }
@@ -151,13 +151,13 @@ export async function POST(req: NextRequest) {
           status: 200,
         });
       } catch (error) {
-        // console.log("Error embedding pdf document", error);
+        // //console.log("Error embedding pdf document", error);
         return new NextResponse("Error Embedding Pdf", {
           status: 500,
         });
       }
     } catch (error) {
-      // console.log("Error parsing pdf document");
+      // //console.log("Error parsing pdf document");
       return new NextResponse("Error parsing pdf document", {
         status: 500,
       });
@@ -166,12 +166,12 @@ export async function POST(req: NextRequest) {
     try {
       const loader = new TextLoader(document as Blob);
       const docs = await loader.load();
-      console.log("DOCS text", docs);
+      //console.log("DOCS text", docs);
       return new NextResponse(JSON.stringify(docs), {
         status: 200,
       });
     } catch (error) {
-      console.log("Error parsing text document", error);
+      //console.log("Error parsing text document", error);
       return new NextResponse("Error", {
         status: 500,
       });

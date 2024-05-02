@@ -36,8 +36,8 @@ export const ChatClient = ({
         // router.refresh();
       },
     });
-  // console.log("INPT", input);
-  console.log("COMPLETION", completion);
+  // //console.log("INPT", input);
+  //console.log("COMPLETION", completion);
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     const userMessage: ChatMessageProps = {
       role: "user",

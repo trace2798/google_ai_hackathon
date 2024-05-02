@@ -38,7 +38,7 @@ export const Chat = ({}) => {
         toast.error("Error precessing request");
       }
       // router.refresh();
-      // // console.log(response.body?.getReader());
+      // // //console.log(response.body?.getReader());
     },
     // onFinish: router.refresh,
   });

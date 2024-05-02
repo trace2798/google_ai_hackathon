@@ -39,7 +39,7 @@ const DisplayFileComponent: FC<DisplayFileComponentProps> = ({
   const handleFileRestore = async () => {
     try {
       const response = await restoreFile(profileId, file.id);
-      console.log(response);
+      //console.log(response);
       if (response === "Unauthorized") {
         toast.error("Unauthorized");
       }
@@ -58,7 +58,7 @@ const DisplayFileComponent: FC<DisplayFileComponentProps> = ({
   const handleFileAndThreadRestore = async () => {
     try {
       const response = await restoreFileandThread(profileId, file.id);
-      console.log(response);
+      //console.log(response);
       if (response === "File not found") {
         toast.error("File not found");
       }
@@ -76,7 +76,7 @@ const DisplayFileComponent: FC<DisplayFileComponentProps> = ({
   const handlePermanentlyDeleteFileAndThreadRestore = async () => {
     try {
       const response = await permanentDeleteFileandThread(profileId, file.id);
-      console.log(response);
+      //console.log(response);
       if (response === "Unauthorized") {
         toast.error("Unauthorized");
       }

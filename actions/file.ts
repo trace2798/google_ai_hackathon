@@ -9,8 +9,8 @@ export async function restoreFile(
 ) {
   try {
     const profile = await currentProfile();
-    console.log(profile);
-    console.log(profileId);
+    //console.log(profile);
+    //console.log(profileId);
     if (!profile) {
       return "Forbidden No Profile";
     }
@@ -42,7 +42,7 @@ export async function restoreFile(
 
     return "Done";
   } catch (error) {
-    console.log("Error action deleteFile", error);
+    //console.log("Error action deleteFile", error);
   }
 }
 
@@ -52,8 +52,8 @@ export async function restoreFileandThread(
 ) {
   try {
     const profile = await currentProfile();
-    console.log(profile);
-    console.log(profileId);
+    //console.log(profile);
+    //console.log(profileId);
     if (!profile) {
       return "Forbidden No Profile";
     }
@@ -92,7 +92,7 @@ export async function restoreFileandThread(
     });
     return "Done";
   } catch (error) {
-    console.log("Error action deleteFile", error);
+    //console.log("Error action deleteFile", error);
   }
 }
 
@@ -102,8 +102,8 @@ export async function permanentDeleteFileandThread(
 ) {
   try {
     const profile = await currentProfile();
-    console.log(profile);
-    console.log(profileId);
+    //console.log(profile);
+    //console.log(profileId);
     if (!profile) {
       return "Forbidden No Profile";
     }
@@ -136,7 +136,7 @@ export async function permanentDeleteFileandThread(
     });
     return "Done";
   } catch (error) {
-    console.log("Error action deleteFile", error);
+    //console.log("Error action deleteFile", error);
   }
 }
 
@@ -146,8 +146,8 @@ export async function softDeleteFile(
 ) {
   try {
     const profile = await currentProfile();
-    console.log(profile);
-    console.log(profileId);
+    //console.log(profile);
+    //console.log(profileId);
     if (!profile) {
       return "Forbidden No Profile";
     }
@@ -193,6 +193,6 @@ export async function softDeleteFile(
     });
     return "Done";
   } catch (error) {
-    console.log("Error action deleteFile", error);
+    //console.log("Error action deleteFile", error);
   }
 }

@@ -13,7 +13,7 @@ export async function updateThreadPrompt(
         id: threadId,
       },
     });
-    console.log("thread", thread);
+    //console.log("thread", thread);
     if (thread?.profileId !== profile?.id) {
       return "Unauthorized";
     }
@@ -33,6 +33,6 @@ export async function updateThreadPrompt(
     });
     return "Done";
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 }

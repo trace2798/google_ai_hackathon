@@ -43,7 +43,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
   const handleRestoreThread = async () => {
     try {
       const response = await restoreThread(profileId, thread.id);
-      console.log(response);
+      //console.log(response);
       if (response === "You need to restore the file to restore this thread") {
         toast.error(
           "File associated with this thread needs to be restored first"
@@ -64,7 +64,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
   const handleRestoreWikiThread = async () => {
     try {
       const response = await restoreWikiThread(profileId, thread.id);
-      console.log(response);
+      //console.log(response);
       if (response === "Unauthorized") {
         toast.error("Unauthorized");
       }
@@ -80,7 +80,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
   const handleRestoreWebThread = async () => {
     try {
       const response = await restoreWebThread(profileId, thread.id);
-      console.log(response);
+      //console.log(response);
       if (response === "Unauthorized") {
         toast.error("Unauthorized");
       }
@@ -99,7 +99,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
         profileId,
         thread.id
       );
-      console.log(response);
+      //console.log(response);
       if (response === "Unauthorized") {
         toast.error("Unauthorized");
       }
@@ -121,7 +121,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
         profileId,
         thread.id
       );
-      console.log(response);
+      //console.log(response);
       if (response === "Unauthorized") {
         toast.error("Unauthorized");
       }
@@ -140,7 +140,7 @@ const DisplayThreadComponent: FC<DisplayThreadComponentProps> = ({
         profileId,
         thread.id
       );
-      console.log(response);
+      //console.log(response);
       if (response === "Unauthorized") {
         toast.error("Unauthorized");
       }
