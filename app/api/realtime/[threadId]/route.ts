@@ -23,7 +23,6 @@ import { WebBrowser } from "langchain/tools/webbrowser";
 import { NextResponse } from "next/server";
 
 const model = new ChatGoogleGenerativeAI({
-  // modelName: "gemini-pro",
   modelName: "gemini-1.5-pro-latest",
   maxOutputTokens: 2048,
   safetySettings: [
@@ -55,14 +54,7 @@ export async function POST(
   try {
     const profile = await currentProfile();
     const body = await request.json();
-    console.log("BODY", body);
-    // const question = `${body.messages[body.messages.length - 1].content}`;
     const question = body.prompt;
-    // const messages = (body.messages ?? []).filter(
-    //   (message: Message) =>
-    //     message.role === "user" || message.role === "assistant",
-    // );
-    // console.log("messages", messages);
     const thread = await db.thread.findUnique({
       where: {
         id: params.threadId,
@@ -100,19 +92,15 @@ export async function POST(
         fileId: thread.fileId as string,
       },
     });
-    // console.log("messages length", body.messages.length);
-
-    console.log("Question: ", question);
-    const messages = (thread.messages ?? []).filter(
-      (message: Message) =>
-        message.role === "user" || message.role === "system"
-    ).slice(-15);
-    console.log("messages", messages);
-    console.log(messages);
+    const messages = (thread.messages ?? [])
+      .filter(
+        (message: Message) =>
+          message.role === "user" || message.role === "system"
+      )
+      .slice(-15);
     const previousMessages = messages
       .slice(0, -1)
       .map(convertVercelMessageToLangChainMessage);
-    console.log("previousMessages", previousMessages);
     const tools = [
       new BraveSearch({ apiKey: process.env.BRAVE_SEARCH_API_KEY }),
       new Calculator(),
@@ -124,9 +112,6 @@ export async function POST(
       verbose: true,
     });
     const data = new StreamData();
-    // const result = await executor.invoke({
-    //   input: question,
-    // });
     const { stream, handlers } = LangChainStream({
       onFinal: () => {
         data.append(JSON.stringify({ key: question })); // example
@@ -141,6 +126,14 @@ export async function POST(
             threadId: thread.id,
             profileId: profile?.id as string,
             fileId: thread.fileId as string,
+          },
+        });
+        await db.thread.update({
+          where: {
+            id: thread.id,
+          },
+          data: {
+            updatedAt: new Date(),
           },
         });
       },
@@ -158,8 +151,6 @@ export async function POST(
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
-
-
 
 // import {
 //   ChatGoogleGenerativeAI,
@@ -208,6 +199,7 @@ export async function POST(
 //     },
 //   ],
 // });
+// // const model = genAI.getGenerativeModel({ model: "gemini-pro" } );
 // const modelName = "text-embedding-004"; // 768 dimensions
 // const taskType = TaskType.SEMANTIC_SIMILARITY;
 // const embeddings = new GoogleGenerativeAIEmbeddings({
@@ -266,23 +258,6 @@ export async function POST(
 //       agent,
 //       tools,
 //     });
-//     // const chain = await initializeAgentExecutorWithOptions(tools, model, {
-//     //   agentType: "zero-shot-react-description",
-//     //   verbose: true,
-//     // });
-//     // const data = new StreamData();
-//     // const result = await executor.invoke({
-//     //   input: question,
-//     // });
-//     // const { stream, handlers } = LangChainStream({
-//     //   onFinal: () => {
-//     //     data.append(JSON.stringify({ key: question })); // example
-//     //     data.close();
-//     //   },
-//     //   onCompletion: async (completion: string) => {
-//     //     console.log("completion", completion.split("\n"));
-//     //   },
-//     // });
 //     const result = await chain.invoke(
 //       {
 //         input: question,
@@ -290,14 +265,10 @@ export async function POST(
 //       }
 //       //   { callbacks: [handlers] }
 //     );
-//     // const stream = LangChainStream({
-//     //   onCompletion: async (completion: string) => {
-//     //     console.log("completion", completion.split("\n"));
-//     //   },
-//     // });
+//     // const stream = GoogleGenerativeAIStream(result);
 //     console.log("result", result);
 //     // return new StreamingTextResponse(result.output, {}, data);
-//     return new NextResponse(result.output, { status: 200 });
+//     return NextResponse.json(result.response.text() , { status: 200 });
 //   } catch (error) {
 //     console.log("error", error);
 //     return new NextResponse("Internal Error", { status: 500 });

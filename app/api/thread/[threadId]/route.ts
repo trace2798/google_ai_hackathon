@@ -202,6 +202,14 @@ export async function POST(
             fileId: thread.fileId as string,
           },
         });
+        await db.thread.update({
+          where: {
+            id: thread.id,
+          },
+          data: {
+            updatedAt: new Date(),
+          },
+        });
       },
     });
     return new StreamingTextResponse(stream);

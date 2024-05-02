@@ -28,13 +28,13 @@ const Page: FC<PageProps> = async ({}) => {
       <div>
         <Heading
           title=" Web Search"
-          description="Here the content of the response is from wikipedia."
-          subdescription="Using google's text-embedding-004 model to embed the content, google gemini-pro to generate answer"
+          description="Here the content of the response is generated using langchain tools and gemini-1.5-pro-latest."
+          subdescription="The langchain tools used in the implementation: Brave Search, Calculator and WebBrowser"
         />
         <Heading
           title="How does it work?"
-          description=""
-          subdescription="Using google's text-embedding-004 model to embed the content, google gemini-pro to generate answer"
+          description="High Level Architecture. Explaining it in detail in my submission post."
+          subdescription="User enters the input -->  initializes a set of tools (BraveSearch, Calculator, and WebBrowser) --> initializes an agent executor with these tools and the chat model  -> initializes a data stream and a LangChain stream with handlers for finalizing the stream --> starts the agent executor with the input --> server returns a streaming text response with the LangChain stream to the user"
         />
       </div>
       <CreateWebThread profileId={profile.id} />

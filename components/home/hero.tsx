@@ -10,7 +10,7 @@ const Hero: FC<HeroProps> = ({}) => {
           <h1 className="text-[40px] md:text-8xl font-satoshiBold bg-gradient-to-r bg-clip-text text-transparent from-indigo-700  to-indigo-300 animate-text">
             Kenniscentrum
           </h1>
-          <h2 className=" ">Where search begins</h2>
+          <h2 className=" ">Where knowledge begins</h2>
           <h3 className="max-w-sm text-muted-foreground">
             Kenniscentrum is my submisssion for{" "}
             <a
